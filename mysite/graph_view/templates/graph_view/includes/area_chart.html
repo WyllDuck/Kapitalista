@@ -1,0 +1,56 @@
+{% block content %}
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', {
+        'packages': ['corechart']
+    });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['quater', '5000-10000', '10000-12500', '12500-15000', '15000-20000', '20000-30000', '+ 30000'],
+            ['Q1', 5, 5.5, 6.7, 6.1, 5.5, 4.5],
+            ['Q2', 5.6, 6.0, 7.0, 6.6, 6.5, 4.6],
+            ['Q3', 5.8, 6.1, 6.8, 6.3, 7.1, 5.0],
+            ['Q4', 5.5, 4.8, 6.5, 6.4, 7.2, 4.5],
+            ['Q5', 5.7, 5.9, 6.4, 6.3, 7.6, 6.0],
+            ['Q6', 6.0, 6.5, 6.0, 6.0, 6.5, 4.9],
+            ['Q7', 6.1, 6.0, 6.6, 6.0, 6.3, 5.1],
+            ['Q8', 5.6, 6.3, 6.7, 5.7, 6.1, 5.4],
+
+
+        ]);
+
+        var options = {
+            hAxis: {
+                title: 'Year',
+                titleTextStyle: {
+                    color: '#333'
+                }
+            },
+            vAxis: {
+                minValue: 0
+            },
+            chartArea: {
+                width: '90%',
+            },
+            title: 'Company Performance',
+            legend: {
+                position: 'bottom',
+                maxLines: 15
+            },
+            bar: {
+                groupWidth: '75%'
+            },
+            colors: ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6', '#f3b42f'],
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div_1'));
+        chart.draw(data, options);
+    }
+</script>
+
+<div id="chart_div_1" style="width: 100%; height: 500px;"></div>
+
+{% endblock %}

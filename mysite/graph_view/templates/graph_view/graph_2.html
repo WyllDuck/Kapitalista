@@ -1,0 +1,58 @@
+{% extends "home/base.html" %} {% block content %}
+
+<!-- Navbar : -->
+
+{% include 'home/includes/navbar.html' %}
+
+<div class="row" style="padding-top: 1%; padding-bottom: 4%; padding-right: 5%; padding-left: 5% ">
+    <div class="col-md-9">
+        {% include 'graph_view/includes/progress_bar_chart.html' %}
+        <br>
+        <br>
+        <h5 class="card-title ">University timestamp by income</h5>
+        <h6 class="card-subtitle mb-2 text-muted ">How many years does it take to get the diploma in relation to your income?</h6>
+        <hr>
+        <h3>Conclusion on the Graph</h3>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab sed, possimus quos distinctio, alias magnam optio, tenetur hic error ut perferendis ducimus. Consequuntur sunt tenetur iure iste quidem fugiat sapiente?</p>
+    </div>
+    <div class="col-md-3">
+        <h3>SETTINGS</h3>
+        <hr>
+        <h6>Add Income:</h6>
+        <div style="padding: 5px">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">from</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">to</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+
+            <button type="button" class="btn btn-primary">Add</button>
+        </div>
+        <hr>
+        <h6>Incomes:</h6>
+        <ul>
+            <li>5000-10000</li>
+            <li>10000-12500</li>
+            <li>12500-15000</li>
+            <li>15000-20000</li>
+            <li>20000-30000</li>
+        </ul>
+        <hr>
+        <h6>Remove Income</h6>
+        <div style="padding: 5px">
+            <select class="form-control">
+                <option>Default select</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+{% include 'home/includes/footer.html' %} {% endblock %}
