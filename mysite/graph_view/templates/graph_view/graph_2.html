@@ -6,7 +6,7 @@
 
 <div class="row" style="padding-top: 1%; padding-bottom: 4%; padding-right: 5%; padding-left: 5% ">
     <div class="col-md-9">
-        {% include 'graph_view/includes/progress_bar_chart.html' %}
+        {% with data=data bar_labels=bar_labels %}{% include 'graph_view/includes/progress_bar_chart.html' %}{% endwith %}
         <br>
         <br>
         <h5 class="card-title ">University timestamp by income</h5>

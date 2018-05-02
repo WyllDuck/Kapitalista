@@ -8,15 +8,22 @@
 
     function drawBasic() {
 
-        var data = google.visualization.arrayToDataTable([
-            ['Income', 'Years'],
-            ['5000-10000', 6.5],
-            ['10000-12500', 5.7],
-            ['12500-15000', 5.4],
-            ['15000-20000', 5.1],
-            ['20000-30000', 4.7],
-            ['+ 30000', 4.3]
-        ]);
+        // FORMATING DATA FROM DJANGO TO JAVASCRIPT:
+        var data = $('#data').data().other;
+
+        var bar_labels = ($('#bar_labels').data().other);
+        bar_labels = bar_labels.split(',')
+
+        // Init variable:
+        var value = new Array();
+        value.push(["Income", "Years"]);
+
+        for (var i = 0; i < data.length; i++) {
+            value.push([bar_labels[i], data[i]]);
+        }
+        // END OF FORMATING
+
+        var data = google.visualization.arrayToDataTable(value);
 
         var options = {
             title: 'University timestamp by income',
@@ -37,5 +44,9 @@
         chart.draw(data, options);
     }
 </script>
+
+<meta id="data" data-name="data" data-other="{{data}}">
+<meta id="bar_labels" data-name="data" data-other="{{bar_labels}}">
+
 <div id="chart_div_2" style="height: 60%"></div>
 {% endblock %}

@@ -6,7 +6,7 @@
 
 <div class="row" style="padding-top: 1%; padding-bottom: 4%; padding-right: 5%; padding-left: 5% ">
     <div class="col-md-9">
-        {% include 'graph_view/includes/stacked_bar_chart.html' %}
+        {% with data=data x_labels=x_labels bar_labels=bar_labels title=title %}{% include 'graph_view/includes/stacked_bar_chart.html' %}{% endwith %}
         <h5 class=" card-title ">Grafic by subject</h5>
         <h6 class="card-subtitle mb-2 text-muted ">Within the same subject the distribution of grades by income in percentage</h6>
         <hr>

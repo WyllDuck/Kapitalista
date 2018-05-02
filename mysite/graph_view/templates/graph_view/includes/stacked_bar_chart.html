@@ -8,29 +8,39 @@
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['23', '5000-10000', '10000-12500', '12500-15000', '15000-20000', '20000-30000',
-                '+ 30000', {
-                    role: 'annotation'
-                }
-            ],
-            ['0-1', 10, 12, 33, 32, 11, 2, ''],
-            ['1-2', 10, 12, 33, 32, 11, 2, ''],
-            ['2-3', 10, 12, 33, 32, 11, 2, ''],
-            ['3-4', 10, 12, 33, 32, 11, 2, ''],
-            ['4-5', 10, 12, 33, 32, 11, 2, ''],
-            ['5-6', 10, 12, 33, 32, 11, 2, ''],
-            ['6-7', 10, 12, 33, 32, 11, 2, ''],
-            ['7-8', 10, 12, 33, 32, 11, 2, ''],
-            ['8-9', 10, 12, 33, 32, 11, 2, ''],
-            ['9-10', 10, 12, 33, 32, 11, 2, '']
-        ]);
+
+        // FORMATING DATA FROM DJANGO TO JAVASCRIPT:
+        var data = $('#data').data().other;
+
+        var x_labels = ($('#x_labels').data().other);
+        x_labels = x_labels.split(',')
+
+        var bar_labels = ($('#bar_labels').data().other);
+        bar_labels = bar_labels.split(',')
+
+        // Adding annotation mark to 'bar_labels':
+        bar_labels.push({
+            role: 'annotation'
+        });
+
+        // Init variable:
+        var value = new Array();
+        value.push(bar_labels);
+
+        for (var i = 0; i < data.length; i++) {
+            data[i].unshift(x_labels[i]);
+            value.push(data[i]);
+        }
+
+        // END OF FORMATING
+
+        var data = google.visualization.arrayToDataTable(value);
 
         var options = {
             chartArea: {
                 width: '90%',
             },
-            title: 'TMM (Theory in Machines and Mechanism)',
+            title: '{{title}}',
             legend: {
                 position: 'bottom',
                 maxLines: 15
@@ -50,6 +60,9 @@
     }
 </script>
 
-<div id="columnchart_values" style="height: 60%"></div>
+<meta id="data" data-name="data" data-other="{{data}}">
+<meta id="x_labels" data-name="data" data-other="{{x_labels}}">
+<meta id="bar_labels" data-name="data" data-other="{{bar_labels}}">
 
+<div id="columnchart_values" style="height: 60%"></div>
 {% endblock %}

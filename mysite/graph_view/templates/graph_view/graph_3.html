@@ -6,7 +6,7 @@
 
 <div class="row" style="padding-top: 1%; padding-bottom: 4%; padding-right: 5%; padding-left: 5% ">
     <div class="col-md-9">
-        {% include 'graph_view/includes/area_chart.html' %}
+        {% with data=data x_labels=x_labels line_labels=line_labels %}{% include 'graph_view/includes/area_chart.html' %}{% endwith %}
         <h5 class="card-title ">Grafic by income</h5>
         <h6 class="card-subtitle mb-2 text-muted ">Average of all grades by income over the quarters</h6>
         <hr>
