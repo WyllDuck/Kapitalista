@@ -10,20 +10,20 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li>
-                <a class="nav-link" href="{% url 'graph:graph_1' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Grafic by subject</a>
+                <a class="nav-link" href="{% url 'graph:graph_1' 'None' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Grafic by subject</a>
             </li>
             <li>
-                <a class="nav-link" href="{% url 'graph:graph_2' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Timestamp Analysis</a>
+                <a class="nav-link" href="{% url 'graph:graph_2' 'Default' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Timestamp Analysis</a>
             </li>
 
             <li>
-                <a class="nav-link" href="{% url 'graph:graph_3' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Grafic by income</a>
+                <a class="nav-link" href="{% url 'graph:graph_3' 'Default' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Grafic by income</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'home:conclusion' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Conclusions</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0" action="{% url 'graph:graph_general' %}">
+        <form class="form-inline my-2 my-lg-0" action="{% url 'graph:graph_general' '08037' %}">
             <input style="font-family: 'Raleway', sans-serif;" class="form-control mr-sm-2" type="search" placeholder="Postal Code" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="font-family: 'Raleway', sans-serif;">Find</button>
         </form>

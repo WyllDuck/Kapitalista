@@ -1,57 +1,246 @@
 {% extends "home/base.html" %} {% block content %}
 
+<style>
+    /* The switch - the box around the slider */
+    
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 46px;
+        height: 20px;
+    }
+    /* Hide default HTML checkbox */
+    
+    .switch input {
+        display: none;
+    }
+    /* The slider */
+    
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgb(31, 255, 106);
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    
+    .slider:before {
+        position: absolute;
+        content:"";
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    
+    input:checked+.slider {
+        background-color: rgb(59, 161, 245);
+    }
+    
+    input:focus+.slider {
+        box-shadow: 0 0 1px rgb(173, 173, 173);
+    }
+    
+    input:checked+.slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+    /* Rounded sliders */
+    
+    .slider.round {
+        border-radius: 10px;
+    }
+    
+    .slider.round:before {
+        border-radius: 50%;
+    }
+</style>
+
 <!-- Navbar : -->
 
 {% include 'home/includes/navbar.html' %}
 
-<div class="row" style="padding-top: 1%; padding-bottom: 4%; padding-right: 5%; padding-left: 5% ">
+<div class="row" style="padding-top: 1%; padding-bottom: 4%; padding-right: 5%; padding-left: 5%">
     <div class="col-md-9">
         {% with data=data bar_labels=bar_labels %}{% include 'graph_view/includes/progress_bar_chart.html' %}{% endwith %}
         <br>
         <br>
-        <h5 class="card-title ">University timestamp by income</h5>
-        <h6 class="card-subtitle mb-2 text-muted ">How many years does it take to get the diploma in relation to your income?</h6>
+        <div class="row">
+            <div style="padding: 5px">
+                <i class="fa fa-bar-chart" aria-hidden="true"></i>
+            </div>
+            <h5 class="card-title">University timestamp by income</h5>
+        </div>
+        <h6 class="card-subtitle mb-2 text-muted">How many years does it take to get the diploma in relation to your income?</h6>
         <hr>
         <h3>Conclusion on the Graph</h3>
         <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab sed, possimus quos distinctio, alias magnam optio, tenetur hic error ut perferendis ducimus. Consequuntur sunt tenetur iure iste quidem fugiat sapiente?</p>
     </div>
     <div class="col-md-3">
-        <h3>SETTINGS</h3>
+
+        <script>
+            function incrementValue(tab) {
+                var value = parseInt(document.getElementById(tab).value, 10);
+                value = isNaN(value) ? 0 : value;
+                value = value + 100;
+                document.getElementById(tab).value = value;
+            }
+
+            function decrementValue(tab) {
+                var value = parseInt(document.getElementById(tab).value, 10);
+                value = isNaN(value) ? 0 : value;
+                if (value <= 0) {
+                    value = 0;
+                } else {
+                    value = value - 100;
+                }
+                document.getElementById(tab).value = value;
+            }
+
+            function verify() {
+
+                var income_from = Number(document.getElementById("income_from").value);
+                var income_to = Number(document.getElementById("income_to").value);
+
+                if (income_from >= income_to || income_from > 60000 || income_to > 60000) {
+                    document.getElementById("alert").style.display ="block";
+                } else {
+                    document.getElementById("alert").style.display ="none";
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelector('input[name="postal_code"]').onchange = changeEventHandler;
+            }, false);
+
+            function changeEventHandler(event) {
+                if (event.target.value == 'home') {
+                    document.getElementById('postal_label_home').style.display ="none";
+                    document.getElementById('postal_label_school').style.display ="block";
+                    this.value = 'school';
+                } else if (event.target.value == 'school') {
+                    document.getElementById('postal_label_home').style.display ="block";
+                    document.getElementById('postal_label_school').style.display ="none";
+                    this.value = 'home';
+                };
+            };
+        </script>
+
+        <div class="row">
+            <div class="col-md-10">
+                <h3>SETTINGS</h3>
+                <div align="left">
+                    <small>Use SCHOOL or HOME postal code</small>
+                    <br>
+                    <small>Toggle the switch to change</small>
+                </div>
+            </div>
+            <div class="col-md-2" align="center">
+                <!-- SWITCH -->
+                <h6 id="postal_label_home">HOME</h6>
+                <h6 id="postal_label_school" style="display: none">SCHOOL</h6>
+                <label class="switch">
+                    <input name="postal_code" type="checkbox" value="home">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+
         <hr>
         <h6>Add Income:</h6>
         <div style="padding: 5px">
+
+            <div>
+                <div>
+                    <h6>FROM:</h6>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <button onclick="decrementValue( 'income_from')" class="btn btn-outline-secondary" type="button">    
+                            <i class="fa fa-minus" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <input id="income_from" min="0" step="100" value="5000" type="number" class="form-control" aria-label="" aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                        <button onclick="incrementValue( 'income_from')" class="btn btn-outline-secondary" type="button">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div>
+                    <h6>TO:</h6>
+                </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">from</span>
+                    <button onclick="decrementValue( 'income_to')" class="btn btn-outline-secondary" type="button">    
+                        <i class="fa fa-minus" aria-hidden="true"></i>
+                    </button>
                 </div>
-                <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                <input id="income_to" min="0" step="100" value="7500" type="number" class="form-control" aria-label="" aria-describedby="basic-addon1">
+                <div class="input-group-append">
+                    <button onclick="incrementValue( 'income_to')" class="btn btn-outline-secondary" type="button">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
             </div>
 
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">to</span>
-                </div>
-                <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-            </div>
 
-            <button type="button" class="btn btn-primary">Add</button>
+            <div class="alert alert-danger" id='alert' style='display: none' role="alert">
+                incomes are not well written
+            </div>
+            <div style="padding-bottom: 10px">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                    <label class="custom-control-label" for="customCheck1">Add above highest income</label>
+                </div>
+            </div>
+            <button type="button" onclick="verify()" class="btn btn-primary">Add</button>
+        </div>
+        <hr>
+        <h6>Remove Income:</h6>
+        <div style="padding: 5px">
+            <select class="form-control">
+                {%if incomes != 'None'%}
+                <option>Default select</option>
+                {% for income in incomes %}
+                <option>{{income}}</option>
+                {% endfor %}
+                {% endif %}
+                {%if incomes == 'None'%}
+                <option>Default select</option>
+                {% endif %}
+            </select>
+        </div>
+        <div style="padding: 5px">
+            <button type="button" class="btn btn-outline-danger">Remove</button>
         </div>
         <hr>
         <h6>Incomes:</h6>
-        <ul>
-            <li>5000-10000</li>
-            <li>10000-12500</li>
-            <li>12500-15000</li>
-            <li>15000-20000</li>
-            <li>20000-30000</li>
-        </ul>
-        <hr>
-        <h6>Remove Income</h6>
-        <div style="padding: 5px">
-            <select class="form-control">
-                <option>Default select</option>
-            </select>
+
+        {%if incomes != 'None'%}
+        <ul>{% for income in incomes %}
+            <li>{{income}}
+                <i class="fa fa-eur" aria-hidden="true"></i>
+            </li>
+            {% endfor %}
+        </ul>{% endif %} {% if incomes == 'None' %}
+        <div class="alert alert-primary" role="alert">
+            Start entering income spans in the box above
         </div>
+        {% endif %}
+
     </div>
 </div>
 
