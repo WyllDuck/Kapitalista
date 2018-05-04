@@ -4,7 +4,7 @@ from django.shortcuts import render
 INPUT:
 subject_code <STRING> == The subject that the end-user wants to see (Navbar returns 'None')
 
-FORMAT EXAMPLE: subject_code = 240011 (Equivalent to: 'Àlgebra Lineal' ) 
+FORMAT EXAMPLE: subject_code = 240011 (Equivalent to: 'Àlgebra Lineal' )
 
 OUTPUT:
 'data' <LIST> == Percentage of people with the same ""grades"" AND ""income""
@@ -16,7 +16,7 @@ OUTPUT:
 
 FORMAT EXAMPLE:
 
-        {'data': 
+        {'data':
            [[ 10, 12, 33, 32, 11, 2],
             [ 10, 12, 33, 32, 11, 2],
             [ 10, 12, 33, 32, 11, 2],
@@ -32,8 +32,8 @@ FORMAT EXAMPLE:
             'title': 'TMM (Theory in Machines and Mechanism)'})
 """
 def graph_1 (request, subject_code):
-    return render(request, "graph_view/graph_1.html", 
-        {'data': 
+    return render(request, "graph_view/graph_1.html",
+        {'data':
            [[ 10, 12, 33, 32, 11, 2],
             [ 10, 12, 33, 32, 11, 2],
             [ 10, 12, 33, 32, 11, 2],
@@ -55,16 +55,16 @@ def graph_1 (request, subject_code):
 INPUT:
 incomes <STRING> == The incomes that the end-user wants to see (Navbar returns 'Default')
 
-FORMAT EXAMPLE: 
+FORMAT EXAMPLE:
     exemple_1:
-        incomes = 5_10a20_30a10_12k5a12k5_15a15_20aREST 
+        incomes = 5_10a20_30a10_12k5a12k5_15a15_20aREST
         (Equivalent to: "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000")
-            
+
     exemple_2: (REST no included)
         incomes = 5_10a10_12k5a12k5_15a15_20a20_30
-        (Equivalent to: "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000") 
+        (Equivalent to: "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000")
 
-Note:   If parser_html or parser_pandas have ""None"" values an error occured during the parsing mecanism or the 
+Note:   If parser_html or parser_pandas have ""None"" values an error occured during the parsing mecanism or the
         url hasn't been well written
 
 OUTPUT:
@@ -80,12 +80,15 @@ FORMAT EXAMPLE:
 """
 def graph_2 (request, incomes):
     # Parse incomes variable:
-    parser_html, parser_pandas = incomeParser(incomes)
+    parser_html, parser_pandas, rest = incomeParser(incomes)
 
-    return render(request, "graph_view/graph_2.html", 
+    return render(request, "graph_view/graph_2.html",
         {'data': [6.5, 5.7, 5.4, 5.1, 4.7, 4.3],
             'bar_labels': "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000",
-            'incomes': parser_html})
+            'incomes': parser_html,
+            'incomes_input': parser_html[:-1] if (rest and parser_html != 'None') else parser_html,
+            'tabulated_incomes': parser_pandas,
+            'rest': 1 if rest else 0 })
 
 
 
@@ -94,16 +97,16 @@ def graph_2 (request, incomes):
 INPUT:
 incomes <STRING> == The incomes that the end-user wants to see (Navbar returns 'Default')
 
-FORMAT EXAMPLE: 
+FORMAT EXAMPLE:
     exemple_1:
-        incomes = 5_10a10_12k5a12k5_15a15_20a20_30aREST 
+        incomes = 5_10a10_12k5a12k5_15a15_20a20_30aREST
         (Equivalent to: "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000")
-            
+
     exemple_2: (REST no included)
         incomes = 5_10a10_12k5a12k5_15a15_20a20_30
         (Equivalent to: "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000")
 
-Note:   If parser_html or parser_pandas have ""None"" values an error occured during the parsing mecanism or the 
+Note:   If parser_html or parser_pandas have ""None"" values an error occured during the parsing mecanism or the
         url hasn't been well written
 
 OUTPUT:
@@ -113,7 +116,7 @@ OUTPUT:
 
 FORMAT EXAMPLE:
 
-         {'data': 
+         {'data':
            [[5, 5.5, 6.7, 6.1, 5.5, 4.5],
             [5.6, 6.0, 7.0, 6.6, 6.5, 4.6],
             [5.8, 6.1, 6.8, 6.3, 7.1, 5.0],
@@ -128,10 +131,10 @@ FORMAT EXAMPLE:
 """
 def graph_3 (request, incomes):
     # Parse incomes variable:
-    parser_html, parser_pandas = incomeParser(incomes)
+    parser_html, parser_pandas, rest = incomeParser(incomes)
 
     return render(request, "graph_view/graph_3.html",
-        {'data': 
+        {'data':
            [[5, 5.5, 6.7, 6.1, 5.5, 4.5],
             [5.6, 6.0, 7.0, 6.6, 6.5, 4.6],
             [5.8, 6.1, 6.8, 6.3, 7.1, 5.0],
@@ -157,12 +160,12 @@ def general (request, postal_code):
 
 
 """
-Parse the url "incomes" variable to analyse the data with pandas 
-and display information to the end-user  
+Parse the url "incomes" variable to analyse the data with pandas
+and display information to the end-user
 """
 def incomeParser (incomes):
     rest = False
-    
+
     # Looking for 'REST':
     if incomes.endswith('aREST'):
         incomes = incomes.replace('aREST', '')
@@ -186,15 +189,14 @@ def incomeParser (incomes):
         # For HTML view:
         parser_pandas.sort()
         for income in parser_pandas:
-            string = '{}-{}'.format(int(income[0]), int(income[1])) 
+            string = '{}-{}'.format(int(income[0]), int(income[1]))
             parser_html.append(string)
-    
+
         if rest:
-            rest = max(item[1] for item in parser_pandas)
-            parser_html.append('+ {}'.format(int(rest)))
-            parser_pandas.append([rest, 100000000])
+            _rest = max(item[1] for item in parser_pandas)
+            parser_html.append('+ {}'.format(int(_rest)))
 
     except:
-        return 'None', None
+        return 'None', None, False
 
-    return parser_html, parser_pandas
+    return parser_html, parser_pandas, rest

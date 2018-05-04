@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_js_reverse',
     'home',
     'graph_view',
     'django.contrib.admin',
