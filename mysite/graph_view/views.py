@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 """
 INPUT:
-subject_code <STRING> == The subject that the end-user wants to see (Navbar returns 'None')
+subject_code <INT : 6 digits> == The subject that the end-user wants to see (Navbar returns 'None')
 
 FORMAT EXAMPLE: subject_code = 240011 (Equivalent to: 'Àlgebra Lineal' )
 
@@ -13,6 +13,8 @@ OUTPUT:
 'x_labels' <STRING> == The desire interval of grades in the subject
 'bar_labels' <STRING> == The desire incomes that the end-user wants to check
 'title' <STRING> == Name of the university subject that the end-user wants to check
+
+HTML RENDER VARIABLES : subjects_jinja
 
 FORMAT EXAMPLE:
 
@@ -29,9 +31,13 @@ FORMAT EXAMPLE:
             [ 10, 12, 33, 32, 11, 2]],
             'x_labels': "0-1,1-2,2-3,3-4,4-5,5-6,6-7,7-8,8-9,9-10",
             'bar_labels': "5000-10000, 10000-12500, 12500-15000, 15000-20000, 20000-30000,+ 30000",
-            'title': 'TMM (Theory in Machines and Mechanism)'})
+            'title': 'TMM (Theory in Machines and Mechanism)',
+            'subjects_jinja': subjects_jinja})
 """
 def graph_1 (request, subject_code):
+
+    from logic.subjects_list import subjects_jinja
+
     return render(request, "graph_view/graph_1.html",
         {'data':
            [[ 10, 12, 33, 32, 11, 2],
@@ -46,7 +52,8 @@ def graph_1 (request, subject_code):
             [ 10, 12, 33, 32, 11, 2]],
             'x_labels': "0-1,1-2,2-3,3-4,4-5,5-6,6-7,7-8,8-9,9-10",
             'bar_labels': "5000-10000, 10000-12500, 12500-15000, 15000-20000, 20000-30000,+ 30000",
-            'title': 'TMM (Theory in Machines and Mechanism)'})
+            'title': 'TMM (Theory in Machines and Mechanism)',
+            'subjects_jinja': subjects_jinja})
 
 
 
@@ -72,15 +79,20 @@ OUTPUT:
     - The values in the list are in the same order as the different incomes in 'bar_labels'
 'bar_labels' <STRING> == The desire incomes that the end-user wants to check
 
+HTML RENDER VARIABLES : incomes, incomes_input, tabulated_incomes, rest
+
 FORMAT EXAMPLE:
 
        {'data': [6.5, 5.7, 5.4, 5.1, 4.7, 4.3],
-            'bar_labels': "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000",
-            'incomes': parser_html})
+           'bar_labels': "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000",
+           'incomes': parser_html,
+           'incomes_input': parser_html[:-1] if (rest and parser_html != 'None') else parser_html,
+           'tabulated_incomes': parser_pandas,
+           'rest': 1 if rest else 0 })
 """
 def graph_2 (request, incomes):
     # Parse incomes variable:
-    parser_html, parser_pandas, rest = incomeParser(incomes)
+    parser_html, parser_pandas, rest = urlParser(incomes)
 
     return render(request, "graph_view/graph_2.html",
         {'data': [6.5, 5.7, 5.4, 5.1, 4.7, 4.3],
@@ -114,24 +126,29 @@ OUTPUT:
 'x_labels' <STRING> == The desire quarters that the end-user wants to check
 'line_labels' <STRING> ==  The desire incomes that the end-user wants to check
 
+HTML RENDER VARIABLES : incomes, incomes_input, tabulated_incomes, rest
+
 FORMAT EXAMPLE:
 
          {'data':
-           [[5, 5.5, 6.7, 6.1, 5.5, 4.5],
-            [5.6, 6.0, 7.0, 6.6, 6.5, 4.6],
-            [5.8, 6.1, 6.8, 6.3, 7.1, 5.0],
-            [5.5, 4.8, 6.5, 6.4, 7.2, 4.5],
-            [5.7, 5.9, 6.4, 6.3, 7.6, 6.0],
-            [6.0, 6.5, 6.0, 6.0, 6.5, 4.9],
-            [6.1, 6.0, 6.6, 6.0, 6.3, 5.1],
-            [5.6, 6.3, 6.7, 5.7, 6.1, 5.4]],
-            'x_labels': 'Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8',
-            'line_labels': '5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000',
-            'incomes': parser_html})
+            [[5, 5.5, 6.7, 6.1, 5.5, 4.5],
+             [5.6, 6.0, 7.0, 6.6, 6.5, 4.6],
+             [5.8, 6.1, 6.8, 6.3, 7.1, 5.0],
+             [5.5, 4.8, 6.5, 6.4, 7.2, 4.5],
+             [5.7, 5.9, 6.4, 6.3, 7.6, 6.0],
+             [6.0, 6.5, 6.0, 6.0, 6.5, 4.9],
+             [6.1, 6.0, 6.6, 6.0, 6.3, 5.1],
+             [5.6, 6.3, 6.7, 5.7, 6.1, 5.4]],
+             'x_labels': 'Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8',
+             'line_labels': '5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000',
+             'incomes': parser_html,
+             'incomes_input': parser_html[:-1] if (rest and parser_html != 'None') else parser_html,
+             'tabulated_incomes': parser_pandas,
+             'rest': 1 if rest else 0 })
 """
 def graph_3 (request, incomes):
     # Parse incomes variable:
-    parser_html, parser_pandas, rest = incomeParser(incomes)
+    parser_html, parser_pandas, rest = urlParser(incomes)
 
     return render(request, "graph_view/graph_3.html",
         {'data':
@@ -145,7 +162,10 @@ def graph_3 (request, incomes):
             [5.6, 6.3, 6.7, 5.7, 6.1, 5.4]],
             'x_labels': 'Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8',
             'line_labels': '5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000',
-            'incomes': parser_html})
+            'incomes': parser_html,
+            'incomes_input': parser_html[:-1] if (rest and parser_html != 'None') else parser_html,
+            'tabulated_incomes': parser_pandas,
+            'rest': 1 if rest else 0 })
 
 
 
@@ -160,10 +180,10 @@ def general (request, postal_code):
 
 
 """
-Parse the url "incomes" variable to analyse the data with pandas
-and display information to the end-user
+Parse the url of "graph_2" and "graph_1" know to which data to analyse with pandas
+and display to the end-user
 """
-def incomeParser (incomes):
+def urlParser (incomes):
     rest = False
 
     # Looking for 'REST':

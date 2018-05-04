@@ -4,29 +4,8 @@
 
 {% include 'home/includes/navbar.html' %}
 
-<style>
-    a:visited {
-        text-decoration: none;
-        color: white;
-    }
-    
-    a:hover {
-        text-decoration: none;
-        color: white;
-    }
-    
-    a:focus {
-        text-decoration: none;
-        color: white;
-    }
-    
-    a:hover,
-    a:active {
-        text-decoration: none;
-        color: white
-    }
-</style>
-
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'home/home.css' %}">
 
 <div style="background: linear-gradient( rgb(202, 209, 248), #4a7cd1)">
     <div align="center">
@@ -69,7 +48,7 @@
                         <div style="padding: 10px">
                             <img src="{% static 'home/img/Stacked_column_chart.png' %}" style="width : 14rem; height : 14rem">
                         </div>
-                        <a href="/graph/1" class="btn btn-dark">View</a>
+                        <a href="{% url 'graph:graph_1' 240011 %}" class="btn btn-dark">View</a>
                     </div>
                 </div>
             </div>
@@ -82,7 +61,7 @@
                         <div style="padding: 10px">
                             <img src="{% static 'home/img/progress_bar.jpg' %}" style="width : 14rem; height : 14rem">
                         </div>
-                        <a href="/graph/2" class="btn btn-dark">View</a>
+                        <a href="{% url 'graph:graph_2' 'Default' %}" class="btn btn-dark">View</a>
                     </div>
                 </div>
             </div>
@@ -95,7 +74,7 @@
                         <div style="padding: 10px">
                             <img src="{% static 'home/img/area_chart.png' %}" style="width : 14rem; height : 14rem">
                         </div>
-                        <a href="/graph/3" class="btn btn-dark">View</a>
+                        <a href="{% url 'graph:graph_3' 'Default' %}" class="btn btn-dark">View</a>
                     </div>
                 </div>
             </div>
