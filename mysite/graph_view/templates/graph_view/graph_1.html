@@ -2,16 +2,15 @@
 
 <!-- Navbar : -->
 
-{% include 'home/includes/navbar.html' %}
-
-{% load staticfiles %}
+{% include 'home/includes/navbar.html' %} {% load staticfiles %}
 <script src="{% static 'graph_view/subject_logic.js' %}"></script>
 <script src="{% static 'graph_view/incomes_logic.js' %}"></script>
 <link rel="stylesheet" href="{% static 'graph_view/incomes_logic.css' %}">
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <div class="row" style="padding-top: 1%; padding-bottom: 4%; padding-right: 5%; padding-left: 5% ">
     <div class="col-md-9">
-        {% with data=data x_labels=x_labels bar_labels=bar_labels title=title %}{% include 'graph_view/includes/stacked_bar_chart.html' %}{% endwith %}
+        {% include 'graph_view/includes/stacked_bar_chart.html' %}
         <br>
         <br>
         <div class="row">
@@ -54,7 +53,7 @@
         <h6>Change subject:</h6>
         <div style="padding: 5px">
             <select id='subject' class="form-control">
-                <option>Default select</option>
+                <option>{{current_subject}}</option>
                 {% for subject in subjects_jinja %}
                     <option>{{subject}}</option>
                 {% endfor %}

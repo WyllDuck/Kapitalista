@@ -1,6 +1,5 @@
 {% block content %}
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', {
         'packages': ['corechart']
@@ -10,12 +9,23 @@
     function drawChart() {
 
         // FORMATING DATA FROM DJANGO TO JAVASCRIPT:
-        var data = $('#data').data().other;
+        var data = $('#data_graph_3').data().other;
 
-        var x_labels = $('#x_labels').data().other;
+        // Get min and max value for google chart:
+        var borders = new Array();
+        for (var x = 0; i < data.length; i++) {
+            for (var y = 0; i < data.length; i++) {
+                borders.push(data[x][y]);
+            }
+        }
+
+        var min = Math.min.apply(null, borders);
+        var max = Math.max.apply(null, borders);
+
+        var x_labels = $('#x_labels_graph_3').data().other;
         x_labels = x_labels.split(',')
 
-        var line_labels = $('#line_labels').data().other;
+        var line_labels = $('#line_labels_graph_3').data().other;
         line_labels = line_labels.split(',')
 
         // Format 'line_lables':
@@ -33,8 +43,8 @@
 
         var data = google.visualization.arrayToDataTable(value);
 
-
         var options = {
+            height: 400,
             hAxis: {
                 title: 'Year',
                 titleTextStyle: {
@@ -42,7 +52,11 @@
                 }
             },
             vAxis: {
-                minValue: 0
+                viewWindowMode: 'explicit',
+                viewWindow: {
+                    max: max,
+                    min: min
+                }
             },
             chartArea: {
                 width: '90%',
@@ -58,13 +72,13 @@
             colors: ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6', '#f3b42f'],
         };
 
-        var chart = new google.visualization.AreaChart(document.getElementById('chart_div_1'));
+        var chart = new google.visualization.AreaChart(document.getElementById('graph_3'));
         chart.draw(data, options);
     }
 </script>
 
-<div id="chart_div_1" style="width: 100%; height: 500px;"></div>
+<div id="graph_3" style="width: 100%"></div>
 
-<meta id="data" data-name="data" data-other="{{data}}">
-<meta id="x_labels" data-name="data" data-other="{{x_labels}}">
-<meta id="line_labels" data-name="data" data-other="{{line_labels}}"> {% endblock %}
+<meta id="data_graph_3" data-name="data" data-other="{{data_graph_3}}">
+<meta id="x_labels_graph_3" data-name="data" data-other="{{x_labels_graph_3}}">
+<meta id="line_labels_graph_3" data-name="data" data-other="{{line_labels_graph_3}}"> {% endblock %}

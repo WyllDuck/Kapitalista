@@ -1,6 +1,5 @@
 {% block content %}
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load("current", {
         packages: ['corechart']
@@ -10,18 +9,13 @@
     function drawChart() {
 
         // FORMATING DATA FROM DJANGO TO JAVASCRIPT:
-        var data = $('#data').data().other;
+        var data = $('#data_graph_1').data().other;
 
-        var x_labels = ($('#x_labels').data().other);
+        var x_labels = ($('#x_labels_graph_1').data().other);
         x_labels = x_labels.split(',')
 
-        var bar_labels = ($('#bar_labels').data().other);
+        var bar_labels = ($('#bar_labels_graph_1').data().other);
         bar_labels = bar_labels.split(',')
-
-        // Adding annotation mark to 'bar_labels':
-        bar_labels.push({
-            role: 'annotation'
-        });
 
         // Init variable:
         var value = new Array();
@@ -37,10 +31,11 @@
         var data = google.visualization.arrayToDataTable(value);
 
         var options = {
+            height: 400,
             chartArea: {
-                width: '90%',
+                width: '85%',
             },
-            title: '{{title}}',
+            title: '{{title_graph_1}}',
             legend: {
                 position: 'bottom',
                 maxLines: 15
@@ -48,21 +43,21 @@
             bar: {
                 groupWidth: '75%'
             },
-            colors: ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6', '#f3b42f'],
-            isStacked: true,
+            colors: ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6', '#f5d9b6'],
+            isStacked: 'percent',
         };
 
         var view = new google.visualization.DataView(data);
         view.setColumns([0, 1, 2, 3, 4, 5, 6]);
 
-        var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+        var chart = new google.visualization.ColumnChart(document.getElementById("graph_1"));
         chart.draw(view, options);
     }
 </script>
 
-<meta id="data" data-name="data" data-other="{{data}}">
-<meta id="x_labels" data-name="data" data-other="{{x_labels}}">
-<meta id="bar_labels" data-name="data" data-other="{{bar_labels}}">
+<meta id="data_graph_1" data-name="data" data-other="{{data_graph_1}}">
+<meta id="x_labels_graph_1" data-name="data" data-other="{{x_labels_graph_1}}">
+<meta id="bar_labels_graph_1" data-name="data" data-other="{{bar_labels_graph_1}}">
 
-<div id="columnchart_values" style="height: 60%"></div>
+<div id="graph_1" style="width: 100%"></div>
 {% endblock %}

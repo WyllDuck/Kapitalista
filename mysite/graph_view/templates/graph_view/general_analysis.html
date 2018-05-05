@@ -1,24 +1,21 @@
 {% extends "home/base.html" %} {% block content %}
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <!-- Navbar : -->
 
 {% include 'home/includes/navbar.html' %}
 
-<div class="row" style="padding-top: 1%; padding-bottom: 4%; padding-right: 5%; padding-left: 5% ">
-    <h1>Postal Code: 08037</h1>
+<div class="col-md-9" style="padding-left: 5%; padding-top: 1%; padding-right: 5%">
+    <h1>Postal Code: {{postal_code}}</h1>
+    <h6>{{location}}</h6>
     <hr>
+</div>
+
+<div class="row" style="padding-top: 1%; padding-bottom: 4%; padding-right: 5%; padding-left: 5% ">
     <div class='col-md-9'>
         <div>
-            {% include 'graph_view/includes/stacked_bar_chart.html' %}
-            <h5 class=" card-title ">Grafic by subject</h5>
-            <h6 class="card-subtitle mb-2 text-muted ">Within the same subject the distribution of grades by income in percentage</h6>
-            <hr>
-        </div>
-        <br>
-        <div>
             {% include 'graph_view/includes/progress_bar_chart.html' %}
-            <br>
-            <br>
             <h5 class="card-title ">University timestamp by income</h5>
             <h6 class="card-subtitle mb-2 text-muted ">How many years does it take to get the diploma in relation to your income?</h6>
             <hr>
@@ -31,24 +28,33 @@
             <hr>
         </div>
         <br>
+        <div>
+            {% include 'graph_view/includes/stacked_bar_chart.html' %}
+            <h5 class=" card-title ">Grafic by subject</h5>
+            <h6 class="card-subtitle mb-2 text-muted ">Within the same subject the distribution of grades by income in percentage</h6>
+            <hr>
+        </div>
+        <br>
     </div>
     <div class='col-md-3'>
-        <div style='background-color: #b4cfff; border-radius: 5px; padding: 10px; position: fixed; top: 20%; z-index:1000'>
-            <h5>Grafic by subject:</h5>
-            <div style='padding: 5px'>
-                <a class='btn btn-light' href="{% url 'graph:graph_1' %}" style='width: 100%'>Twist the variables</a>
+        <center>
+            <div style=' box-shadow: 3px 6px 4px #888888; background-color: #b4cfff; border-radius: 5px; padding: 10px; position: fixed; top: 20%; z-index:1000'>
+                <h5>Timestamp Analysis:</h5>
+                <div style='padding: 5px'>
+                    <a class='btn btn-light' href="{% url 'graph:graph_2' 'Dafault' %}" style='width: 100%'>Twist the variables</a>
+                </div>
+                <hr>
+                <h5>Grafic by income:</h5>
+                <div style='padding: 5px'>
+                    <a class='btn btn-light' href="{% url 'graph:graph_3' 'Dafault' %}" style='width: 100%'>Twist the variables</a>
+                </div>
+                <hr>
+                <h5>Grafic by subject:</h5>
+                <div style='padding: 5px'>
+                    <a class='btn btn-light' href="{% url 'graph:graph_1' 240011 %}" style='width: 100%'>Twist the variables</a>
+                </div>
             </div>
-            <hr>
-            <h5>Timestamp Analysis:</h5>
-            <div style='padding: 5px'>
-                <a class='btn btn-light' href="{% url 'graph:graph_2' %}" style='width: 100%'>Twist the variables</a>
-            </div>
-            <hr>
-            <h5>Grafic by income:</h5>
-            <div style='padding: 5px'>
-                <a class='btn btn-light' href="{% url 'graph:graph_3' %}" style='width: 100%'>Twist the variables</a>
-            </div>
-        </div>
+        </center>
     </div>
 </div>
 

@@ -1,5 +1,5 @@
 {% block content %}
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <script type="text/javascript">
     google.charts.load('current', {
         packages: ['corechart', 'bar']
@@ -9,9 +9,9 @@
     function drawBasic() {
 
         // FORMATING DATA FROM DJANGO TO JAVASCRIPT:
-        var data = $('#data').data().other;
+        var data = $('#data_graph_2').data().other;
 
-        var bar_labels = ($('#bar_labels').data().other);
+        var bar_labels = ($('#bar_labels_graph_2').data().other);
         bar_labels = bar_labels.split(',')
 
         // Init variable:
@@ -26,6 +26,7 @@
         var data = google.visualization.arrayToDataTable(value);
 
         var options = {
+            height: 400,
             title: 'University timestamp by income',
             chartArea: {
                 width: '65%',
@@ -39,14 +40,14 @@
             }
         };
 
-        var chart = new google.visualization.BarChart(document.getElementById('chart_div_2'));
+        var chart = new google.visualization.BarChart(document.getElementById('graph_2'));
 
         chart.draw(data, options);
     }
 </script>
 
-<meta id="data" data-name="data" data-other="{{data}}">
-<meta id="bar_labels" data-name="data" data-other="{{bar_labels}}">
+<meta id="data_graph_2" data-name="data" data-other="{{data_graph_2}}">
+<meta id="bar_labels_graph_2" data-name="data" data-other="{{bar_labels_graph_2}}">
 
-<div id="chart_div_2" style="height: 60%"></div>
+<div id="graph_2" style="width: 100%"></div>
 {% endblock %}
