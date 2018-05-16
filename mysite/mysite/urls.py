@@ -19,5 +19,6 @@ from django.conf.urls import url, include
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include("home.urls", namespace='home')),
-    url(r'^graph/', include("graph_view.urls", namespace='graph')),    
+    url(r'^graph/', include("graph_view.urls", namespace='graph')),
+    url(r'^test/', include("test_ajax.urls", namespace='test'))
 ]
