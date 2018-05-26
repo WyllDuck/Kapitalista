@@ -1,0 +1,68 @@
+{% block content %}
+
+<script type="text/javascript">
+    google.charts.load('current', {
+        'packages': ['scatter']
+    });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+        // FORMATING DATA FROM DJANGO TO JAVASCRIPT:
+        var value = $('#data_graph_5').data().other;
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Income');
+        data.addColumn('number', 'Average Grade');
+
+        data.addRows(value);
+
+        var options = {
+            height: 500,
+            chart: {
+                title: 'Distribution of Grades by income for "{{title_graph_5}}"',
+                subtitle: 'How does income affect grades?'
+            },
+            hAxis: {
+                title: 'Income',
+                textStyle: {
+                    color: 'black',
+                    fontName: 'Raleway',
+                    fontSize: '16'
+                }
+            },
+            vAxis: {
+                title: 'Average Grade',
+                textStyle: {
+                    color: 'black',
+                    fontName: 'Raleway',
+                    fontSize: '16'
+                }
+            },
+            legend: {
+                position: 'none',
+            },
+            trendlines: {
+                0: {
+                    type: 'exponential',
+                }
+            }
+        };
+
+        var chart = new google.charts.Scatter(document.getElementById('graph_5'));
+
+        chart.draw(data, google.charts.Scatter.convertOptions(options));
+    }
+</script>
+
+<meta id="data_graph_5" data-name="data" data-other="{{data_graph_5}}">
+
+<div id="graph_5" style="width: 100%"></div>
+<hr>
+<div class="row">
+    <h5> <span class="badge badge-pill badge-primary">The linear regression of this points gives:</span></h5>
+    <div style="padding-left: 10px">
+        {{linear_regression}}
+    </div>
+</div>
+{% endblock %}

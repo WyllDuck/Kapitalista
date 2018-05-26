@@ -1,0 +1,66 @@
+{% block content %}
+<script>
+    google.charts.load('current', {
+        packages: ['corechart', 'bar']
+    });
+    google.charts.setOnLoadCallback(drawBasic);
+
+    function drawBasic() {
+
+        // FORMATING DATA FROM DJANGO TO JAVASCRIPT:
+        var data = $('#data_graph_6').data().other;
+
+        var x_labels = ($('#x_labels_graph_6').data().other);
+        x_labels = x_labels.split(',')
+
+        // Init variable:
+        var value = new Array();
+        value.push(["Income", "Number of People"]);
+
+        for (var i = 0; i < data.length; i++) {
+            value.push([x_labels[i], data[i]]);
+        }
+
+        var data = google.visualization.arrayToDataTable(value)
+
+
+        var options = {
+            height: 400,
+            title: '{{top_bottom}} {{percent}}% in {{subject}}',
+            chartArea: {
+                width: '90%',
+            },
+            hAxis: {
+                title: 'Time of Day',
+                format: 'h:mm a',
+                viewWindow: {
+                    min: [7, 30, 0],
+                    max: [17, 30, 0]
+                }
+            },
+            legend: {
+                position: 'bottom',
+                textStyle: {
+                    color: 'black',
+                    fontName: 'Raleway',
+                    fontSize: '14'
+                }
+            },
+            vAxis: {
+                title: 'Rating (scale of 1-10)'
+            }
+        };
+
+        var chart = new google.visualization.ColumnChart(
+            document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+</script>
+
+<meta id="data_graph_6" data-name="data" data-other="{{data_graph_6}}">
+<meta id="x_labels_graph_6" data-name="data" data-other="{{x_labels_graph_6}}">
+
+<div id="chart_div" style="width: 100%"></div>
+
+{% endblock%}

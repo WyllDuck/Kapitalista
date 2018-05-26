@@ -1,4 +1,8 @@
 {% block content %} {% load staticfiles %}
+
+<script src="{% static 'home/postal_code_to_income.js' %}"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+
 <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light">
     <a class="navbar-brand" href="{% url 'home:index' %}" style="font-family: 'Raleway', sans-serif;">
         <img src="{% static 'home/img/icon.svg' %}" style="width:150px; height: 58px">
@@ -10,23 +14,37 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li>
-                <a class="nav-link" href="{% url 'graph:graph_1' 240011 %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Grafic by subject</a>
+                <a class="nav-link" href="{% url 'graph:graph_1' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Grafic by subject</a>
             </li>
             <li>
-                <a class="nav-link" href="{% url 'graph:graph_2' 'Default' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Timestamp Analysis</a>
+                <a class="nav-link" href="{% url 'graph:graph_2' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Timestamp Analysis</a>
             </li>
 
             <li>
-                <a class="nav-link" href="{% url 'graph:graph_3' 'Default' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Grafic by income</a>
+                <a class="nav-link" href="{% url 'graph:graph_3' 'Default' 'Default' 'HOME' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Grafic by income</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'home:conclusion' %}" style="font-family: 'Raleway', sans-serif; font-size: large;">Conclusions</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0" action="{% url 'graph:graph_general' '08037' %}">
-            <input style="font-family: 'Raleway', sans-serif;" class="form-control mr-sm-2" type="search" placeholder="Postal Code" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="font-family: 'Raleway', sans-serif;">Find</button>
-        </form>
+        <div class="form-inline my-2 my-lg-0">
+            <div style="padding-right: 15px">
+                <div id="income_AJAX" class "col" style="width: 90px; height: 90px; background-color: rgb(185, 185, 253); border-radius: 45px; text-align: center; padding-top: 10px">
+                    Start Now!
+                    <p style="color: rgb(255, 251, 0);  font-weight: 1000"> Enter your postal code </p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="row" style="padding-bottom: 5px">
+                    <small>Get the income for a given postal code</small>
+                </div>
+                <div class="row">
+                    <input max=99999 min=00000 id="postal_code_income_input" onkeydown="javascript: return event.keyCode == 69 ? false : true" style="font-family: 'Raleway', sans-serif; width: 150px; -webkit-appearance: none" class="form-control mr-sm-2" type="number" placeholder="Postal Code">
+                    <button id="button_postal_to_income" onclick="postal_code_to_income()" class="btn btn-outline-success my-2 my-sm-0" style="font-family: 'Raleway', sans-serif;">Find</button>
+                </div>
+            </div>
+        </div>
     </div>
 </nav>
 {% endblock %}

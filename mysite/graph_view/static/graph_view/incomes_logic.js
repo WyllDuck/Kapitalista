@@ -64,6 +64,81 @@ function changeEventHandler(event) {
 };
 
 
+function add_subject() {
+
+    // Get other variables:
+    var rest = Number($('#_rest').data().other);
+    var incomes = $('#tabulated_incomes').data().other;
+
+    if (incomes === 'None') {
+        incomes = new Array()
+    }
+
+    // Add subject:
+    var subjects_list = String($('#subjects_js').data().other);
+    if (subjects_list === 'None') {
+        subjects_list = new Array()
+    } else {
+        var subjects_list = subjects_list.split('a')
+    }
+
+    if (subjects_list.length <= 4) {
+        var newValue = document.getElementById('add_subject').value
+        var newValue = newValue.split(':')[0]
+        subjects_list.push(newValue)
+        var subjects_list = subjects_list.join('a')
+    } else {
+        return
+    }
+
+    var income_url = get_income_url(incomes, rest)
+    var postal_code = document.querySelector('input[name="postal_code"]').value.toUpperCase()
+    go_to_url(income_url, subjects_list, postal_code)
+
+}
+
+function remove_subject() {
+
+    // Get other variables:
+    var rest = Number($('#_rest').data().other);
+    var incomes = $('#tabulated_incomes').data().other;
+
+    if (incomes === 'None') {
+        incomes = new Array()
+    }
+
+    // Remove subject:
+    var subjects_list = String($('#subjects_js').data().other);
+    if (subjects_list === 'None') {
+        return
+    } else {
+        var subjects_list = subjects_list.split('a')
+    }
+
+    if (subjects_list.length != 1) {
+        var newValue = document.getElementById('remove_subject').value
+        var newValue = newValue.split(':')[0]
+
+        // Get the value you want to remove
+        var index = subjects_list.indexOf(newValue);
+        if (index > -1) {
+            subjects_list.splice(index, 1);
+        } else {
+            return
+        }
+
+        var subjects_list = subjects_list.join('a')
+    } else {
+        subjects_list = 'None'
+    }
+
+    var income_url = get_income_url(incomes, rest)
+    var postal_code = document.querySelector('input[name="postal_code"]').value.toUpperCase()
+    go_to_url(income_url, subjects_list, postal_code)
+
+}
+
+
 function add() {
 
     if (verify()) {
@@ -81,13 +156,20 @@ function add() {
         var rest = document.getElementById("rest").checked
 
         incomes.push(value)
-        go_to_url(incomes, rest)
+
+        // Get values form HTML subjects:
+        var subjects_list = String($('#subjects_js').data().other);
+
+        var income_url = get_income_url(incomes, rest)
+        var postal_code = document.querySelector('input[name="postal_code"]').value.toUpperCase()
+        go_to_url(income_url, subjects_list, postal_code)
+
     }
 }
 
 function remove(value) {
 
-    // Get values from HTML:
+    // Get values from HTML incomes:
     var rest = Number($('#_rest').data().other);
     var incomes = $('#tabulated_incomes').data().other;
     var remove = document.getElementById('remove').value;
@@ -106,18 +188,23 @@ function remove(value) {
         return
     }
 
-    for (var i = 0; i < incomes.length; i++) {
+    for (i = 0; i < incomes.length; i++) {
         if (String(incomes[i]) === String(remove)) {
             incomes.splice(i, 1)
         }
     }
 
-    go_to_url(incomes, rest)
+    // Get values form HTML subjects:
+    var subjects_list = String($('#subjects_js').data().other);
+
+    var income_url = get_income_url(incomes, rest)
+    var postal_code = document.querySelector('input[name="postal_code"]').value.toUpperCase()
+    go_to_url(income_url, subjects_list, postal_code)
 }
 
 
 // Change Url Function:
-function go_to_url(incomes, rest) {
+function get_income_url(incomes, rest) {
 
     var url = '';
     for (var i = 0; i < incomes.length; i++) {
@@ -147,5 +234,23 @@ function go_to_url(incomes, rest) {
     if (rest) {
         url += 'REST'
     }
-    document.location.href = url
+    return url
+}
+
+function go_to_url(income_url, subjects_list, postal_code) {
+    var host = window.location.host;
+
+    // Get path and formating path:    
+    var path = window.location.pathname;
+    path = path.slice(1, path.length - 1)
+    path = path.split('/')
+
+    // Changing values path:
+    path[2] = income_url
+    path[3] = subjects_list
+    path[4] = postal_code
+    path = path.join('/')
+
+    // Go to the new URL
+    document.location.href = window.location.protocol + '//' + host + '/' + path
 }

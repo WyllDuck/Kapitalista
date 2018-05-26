@@ -1,10 +1,10 @@
 {% extends "home/base.html" %} {% block content %}
 
+<title>KapitaList - Home</title>
+
 <!-- Navbar -->
 
-{% include 'home/includes/navbar.html' %}
-
-{% load staticfiles %}
+{% include 'home/includes/navbar.html' %} {% load staticfiles %}
 <link rel="stylesheet" href="{% static 'home/home.css' %}">
 
 <div style="background: linear-gradient( rgb(202, 209, 248), #4a7cd1)">
@@ -48,7 +48,7 @@
                         <div style="padding: 10px">
                             <img src="{% static 'home/img/Stacked_column_chart.png' %}" style="width : 14rem; height : 14rem">
                         </div>
-                        <a href="{% url 'graph:graph_1' 240011 %}" class="btn btn-dark">View</a>
+                        <a href="{% url 'graph:graph_1' %}" class="btn btn-dark">View</a>
                     </div>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                         <div style="padding: 10px">
                             <img src="{% static 'home/img/progress_bar.jpg' %}" style="width : 14rem; height : 14rem">
                         </div>
-                        <a href="{% url 'graph:graph_2' 'Default' %}" class="btn btn-dark">View</a>
+                        <a href="{% url 'graph:graph_2' %}" class="btn btn-dark">View</a>
                     </div>
                 </div>
             </div>
@@ -74,7 +74,7 @@
                         <div style="padding: 10px">
                             <img src="{% static 'home/img/area_chart.png' %}" style="width : 14rem; height : 14rem">
                         </div>
-                        <a href="{% url 'graph:graph_3' 'Default' %}" class="btn btn-dark">View</a>
+                        <a href="{% url 'graph:graph_3' 'Default' 'Default' 'HOME' %}" class="btn btn-dark">View</a>
                     </div>
                 </div>
             </div>

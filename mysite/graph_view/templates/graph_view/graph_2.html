@@ -1,13 +1,13 @@
 {% extends "home/base.html" %} {% block content %} {% load staticfiles %}
-<script src="{% static 'graph_view/incomes_logic.js' %}"></script>
+<script src="{% static 'graph_view/ajax_logic_graph_2.js' %}"></script>
+
 <link rel="stylesheet" href="{% static 'graph_view/incomes_logic.css' %}">
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
+<title>KapitaList - Charts</title>
+
 <!-- Navbar : -->
 {% include 'home/includes/navbar.html' %}
-
-<meta id="tabulated_incomes" data-name="data" data-other="{{tabulated_incomes}}">
-<meta id="_rest" data-name="data" data-other="{{rest}}">
 
 <div class="row" style="padding-top: 1%; padding-bottom: 4%; padding-right: 5%; padding-left: 5%">
 
@@ -15,7 +15,9 @@
     ZONE WITH GRAPHIC
     -->
     <div class="col-md-9">
-        {% include 'graph_view/includes/progress_bar_chart.html' %}
+        <div id="chart_6">
+            {% include 'graph_view/none.html' %}
+        </div>
         <br>
         <br>
         <div class="row">
@@ -49,7 +51,7 @@
                 <h6 id="postal_label_home">HOME</h6>
                 <h6 id="postal_label_school" style="display: none">SCHOOL</h6>
                 <label class="switch">
-                    <input name="postal_code" type="checkbox" value="home">
+                    <input name="postal_code" type="checkbox" id="postal_code_checkbox" value="home">
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -57,99 +59,65 @@
 
         <hr>
 
-        <h6>Add Income:</h6>
+        <h6>Change subject:</h6>
         <div style="padding: 5px">
-            <div>
-                <div>
-                    <h6>FROM:</h6>
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <button onclick="decrementValue( 'income_from')" class="btn btn-outline-secondary" type="button">
-                            <i class="fa fa-minus" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <input id="income_from" min="0" step="100" value="5000" type="number" class="form-control" aria-label="" aria-describedby="basic-addon1">
-                    <div class="input-group-append">
-                        <button onclick="incrementValue( 'income_from')" class="btn btn-outline-secondary" type="button">
-                            <i class="fa fa-plus" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div>
-                    <h6>TO:</h6>
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <button onclick="decrementValue( 'income_to')" class="btn btn-outline-secondary" type="button">
-                            <i class="fa fa-minus" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <input id="income_to" min="0" step="100" value="7500" type="number" class="form-control" aria-label="" aria-describedby="basic-addon1">
-                    <div class="input-group-append">
-                        <button onclick="incrementValue( 'income_to')" class="btn btn-outline-secondary" type="button">
-                            <i class="fa fa-plus" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="alert alert-danger" id='alert_1' style='display: none' role="alert">
-                incomes are not well written
-            </div>
-
-            <div class="alert alert-info" id='alert_2' style='display: none' role="alert">
-                income span already include
-            </div>
-
-            <div style="padding-bottom: 10px">
-                <div class="form-check form-check-inline">
-                    <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" id="rest" value="option1"> Add above highest income
-                </label>
-                </div>
-            </div>
-            <button type="button" onclick="add()" class="btn btn-primary">Add</button>
-        </div>
-        <hr>
-
-
-        <h6>Remove Income:</h6>
-        <div style="padding: 5px">
-            <select class="form-control" id='remove'>
-                {%if incomes != 'None'%}
-                <option>Default select</option>
-                {% for income in incomes_input %}
-                <option>{{income}}</option>
+            <select id='subject' class="form-control">
+                {% for subject in subjects_jinja %}
+                    <option>{{subject}}</option>
                 {% endfor %}
-                {% endif %}
-                {%if incomes == 'None'%}
-                <option>Default select</option>
-                {% endif %}
             </select>
         </div>
-
-        <div style="padding: 5px">
-            <button type="button" onclick="remove()" class="btn btn-outline-danger">Remove</button>
-        </div>
-
         <hr>
+        <div class="row">
+            <div class="col-md-9">
+                <h6>Select the TOP or BOTTOM percent:</h6>
+            </div>
+            <div class="col-md-3">
+                <!-- SWITCH TOP BOTTOM-->
 
-        <h6>Incomes:</h6>
-        {%if incomes != 'None'%}
-        <ul>{% for income in incomes %}
-            <li>{{income}}
-                <i class="fa fa-eur" aria-hidden="true"></i>
-            </li>
-            {% endfor %}
-        </ul>{% endif %} {% if incomes == 'None' %}
-        <div class="alert alert-primary" role="alert">
-            Start entering income spans in the box above
+                <div>
+                    <center>
+                        <h6 id="top_bottom_TOP">TOP</h6>
+                        <h6 id="top_bottom_BOTTOM" style="display: none">BOTTOM</h6>
+                    </center>
+                </div>
+                <div>
+                    <label class="switch">
+                        <input name="top_bottom" id="top_bottom_checkbox" type="checkbox" value="top">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
         </div>
-        {% endif %}
+        <div style="padding: 5px">
+            <select id="percent" class="form-control">
+                <option value="0.05">5%</option>
+                <option value="0.10">10%</option>
+                <option value="0.15">15%</option>
+                <option value="0.20">20%</option>
+                <option value="0.25">25%</option>
+                <option value="0.30">30%</option>
+                <option value="0.35">35%</option>
+                <option value="0.40">40%</option>
+                <option value="0.45">45%</option>
+                <option value="0.50">50%</option>
+                <option value="0.55">55%</option>
+                <option value="0.60">60%</option>
+                <option value="0.65">65%</option>
+                <option value="0.70">70%</option>
+                <option value="0.75">75%</option>
+                <option value="0.80">80%</option>
+                <option value="0.85">85%</option>
+                <option value="0.90">90%</option>
+                <option value="0.95">95%</option>               
+            </select>
+
+            <br>
+
+            <button type="button" onclick="AJAX_refresh()" class="btn btn-primary">Go to</button>
+
+
+        </div>
     </div>
 </div>
 

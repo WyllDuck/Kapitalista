@@ -1,0 +1,101 @@
+{% block content %}
+
+<script type="text/javascript">
+    function flatten(arr) {
+        return arr.reduce(function(flat, toFlatten) {
+            return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+        }, []);
+    }
+
+    google.charts.load('current', {
+        'packages': ['corechart']
+    });
+    google.charts.setOnLoadCallback(drawVisualization);
+
+    function drawVisualization() {
+
+        // FORMATING DATA FROM DJANGO TO JAVASCRIPT:
+        var data = $('#data_graph_4').data().other;
+
+        var x_labels = $('#x_labels_graph_4').data().other;
+        x_labels = x_labels.split(',');
+
+        var column_labels = $('#column_labels_graph_4').data().other;
+        column_labels = column_labels.split(',');
+
+        var min = Math.min.apply(null, flatten(data)) - 1
+        var max = Math.max.apply(null, flatten(data)) + 1
+
+
+        // Init variable:
+        var value = new Array();
+        value.push(x_labels);
+
+        for (var i = 0; i < data.length; i++) {
+            var enter_value = [column_labels[i]]
+            enter_value = enter_value.concat(data[i])
+            value.push(enter_value);
+        }
+
+        var Vticks = new Array();
+
+        for (var i = 0; i < (max - min) / 0.5; i++) {
+            Vticks.push(min + i * 0.5)
+        }
+
+        var data = google.visualization.arrayToDataTable(value);
+
+        var options = {
+            height: 450,
+            chart: {
+                title: 'Average grade by income in diferent subjects',
+                subtitle: 'How does income affect grades?',
+            },
+            seriesType: 'bars',
+            chartArea: {
+                width: '90%',
+            },
+            legend: {
+                position: 'top',
+                textStyle: {
+                    color: 'black',
+                    fontName: 'Raleway',
+                    fontSize: '14'
+                }
+            },
+            hAxis: {
+                textStyle: {
+                    color: 'black',
+                    fontName: 'Raleway',
+                    fontSize: '14'
+                }
+            },
+            theme: 'material',
+            vAxis: {
+                ticks: Vticks,
+                viewWindowMode: 'explicit',
+                viewWindow: {
+                    min: min,
+                    max: max
+                },
+                textStyle: {
+                    color: 'black',
+                    fontName: 'Raleway',
+                    fontSize: '12'
+                }
+            },
+        };
+
+        var chart = new google.visualization.ComboChart(document.getElementById('graph_4'));
+        chart.draw(data, options);
+    }
+</script>
+
+<meta id="data_graph_4" data-name="data" data-other="{{data_graph_4}}">
+<meta id="x_labels_graph_4" data-name="data" data-other="{{x_labels_graph_4}}">
+<meta id="column_labels_graph_4" data-name="data" data-other="{{column_labels_graph_4}}">
+
+<div id="graph_4" style="width: 100%"></div>
+
+
+{% endblock %}
