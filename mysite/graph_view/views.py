@@ -1,42 +1,30 @@
 from django.shortcuts import render
 
+
 """
 INPUT:
-subject_code <INT : 6 digits> == The subject that the end-user wants to see (Navbar returns 'None')
+postal_code <STRING> == The type of postal code we are going to use for the data treatment
+Note: postal_ code = 'HOME' or 'SCHOOL'
 
-FORMAT EXAMPLE: subject_code = 240011 (Equivalent to: 'Àlgebra Lineal' )
+    FORMAT EXAMPLE: postal_code = 'HOME'
+
+subject_code <INT : 6 digits> == The subject that the end-user wants to see
+
+    FORMAT EXAMPLE: subject_code = 240011 (Equivalent to: 'Àlgebra Lineal' )
 
 OUTPUT:
-'data' <LIST> == Percentage of people with the same ""grades"" AND ""income""
-    - The lists inside the main list are ordered in the same order as "bar_labels"
-    - The values inside the secondary lists are ordered in the same order as "x_labels"
-'x_labels' <STRING> == The desire interval of grades in the subject
-'bar_labels' <STRING> == The desire incomes that the end-user wants to check
+'data' <LIST> == List of list: [Income, Average Grade]
+'title_graph' <STRING> == The title
+'linear_regression' <STRING> == The linear regression of the list of points 'data'
 
-            ""Note: The first label is allways the x_labels""
-
-'title' <STRING> == Name of the university subject that the end-user wants to check
-
-HTML RENDER VARIABLES : subjects_jinja
+HTML RENDER VARIABLES : title_graph_5
+PANDAS VARIABLES: data_graph_5; linear_regression
 
 FORMAT EXAMPLE:
 
-        {'data_graph_1':
-           [[ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2]],
-            'x_labels_graph_1': "0-1,1-2,2-3,3-4,4-5,5-6,6-7,7-8,8-9,9-10",
-            'bar_labels_graph_1': "x_labels, 5000-10000, 10000-12500, 12500-15000, 15000-20000, 20000-30000,+ 30000",
-            'title_graph_1': 'TMM (Theory in Machines and Mechanism)',
-            'subjects_jinja': get_input_var(int(subject_code)),
-            'current_subject': get_current_subject(int(subject_code))}
+        {'data_graph_5': [[0, 67],[1, 88],[2, 77],[3, 93],[4, 85],[5, 91],[6, 71],[7, 78],[8, 93],[9, 80],[10, 82],[0, 75],[5, 80],[3, 90],[1, 72],[5, 75],[6, 68],[7, 98],[3, 82],[9, 94],[2, 79],[2, 95],[2, 86],[3, 67],[4, 60],[2, 80],[6, 92],[2, 81],[8, 79],[9, 83],[3, 75],[1, 80],[3, 71],[3, 89],[4, 92],[5, 85],[6, 92],[7, 78],[6, 95],[3, 81],[0, 64],[4, 85],[2, 83],[3, 96],[4, 77],[5, 89],[4, 89],[7, 84],[4, 92],[9, 98]],
+            'title_graph_5': get_name(int(subject_code)),
+            'linear_regression': 'x^2 + x + 1'})
 """
 
 def graph_5_AJAX(request):
@@ -58,6 +46,49 @@ def graph_5_AJAX(request):
     else:
         return render(request, "graph_view/none.html")
 
+"""
+INPUT:
+postal_code <STRING> == The type of postal code we are going to use for the data treatment
+    Note: postal_ code = 'HOME' or 'SCHOOL'
+
+    FORMAT EXAMPLE: postal_code = 'HOME'
+
+subject_code <INT : 6 digits> == The subject that the end-user wants to see (Navbar returns 'None')
+
+    FORMAT EXAMPLE: subject_code = 240011 (Equivalent to: 'Àlgebra Lineal' )
+
+OUTPUT:
+'data' <LIST> == Percentage of people with the same ""grades"" AND ""income""
+    - The lists inside the main list are ordered in the same order as "bar_labels"
+    - The values inside the secondary lists are ordered in the same order as "x_labels"
+'x_labels' <STRING> == The desire interval of grades in the subject
+'bar_labels' <STRING> == The desire incomes that the end-user wants to check
+
+            ""Note: The first label is allways the x_labels""
+
+'title' <STRING> == Name of the university subject that the end-user wants to check
+
+HTML RENDER VARIABLES : subject_code; title_graph_1
+PANDAS VARIABLES: data_graph_1; x_labels_graph_1; bar_labels_graph_1
+
+FORMAT EXAMPLE:
+
+        {'data_graph_1':
+           [[ 10, 12, 33, 32, 11, 2],
+            [ 10, 12, 33, 32, 11, 2],
+            [ 10, 12, 33, 32, 11, 2],
+            [ 10, 12, 33, 32, 11, 2],
+            [ 10, 12, 33, 32, 11, 2],
+            [ 10, 12, 33, 32, 11, 2],
+            [ 10, 12, 33, 32, 11, 2],
+            [ 10, 12, 33, 32, 11, 2],
+            [ 10, 12, 33, 32, 11, 2],
+            [ 10, 12, 33, 32, 11, 2]],
+            'x_labels_graph_1': "0-1,1-2,2-3,3-4,4-5,5-6,6-7,7-8,8-9,9-10",
+            'bar_labels_graph_1': "x_labels, 5000-10000, 10000-12500, 12500-15000, 15000-20000, 20000-30000,+ 30000",
+            'title_graph_1': 'TMM (Theory in Machines and Mechanism)'
+            'subject': subject_code,}
+"""
 
 def graph_1_AJAX(request):
 
@@ -100,35 +131,31 @@ def graph_1 (request):
 
 """
 INPUT:
-incomes <STRING> == The incomes that the end-user wants to see (Navbar returns 'Default')
+postal_code <STRING> == The type of postal code we are going to use for the data treatment
+    Note: postal_ code = 'HOME' or 'SCHOOL'
 
-FORMAT EXAMPLE:
-    exemple_1:
-        incomes = 5_10a20_30a10_12k5a12k5_15a15_20aREST
-        (Equivalent to: "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000")
+subject_code <INT : 6 digits> == The subject that the end-user wants to see (Navbar returns 'None')
 
-    exemple_2: (REST no included)
-        incomes = 5_10a10_12k5a12k5_15a15_20a20_30
-        (Equivalent to: "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000")
+    FORMAT EXAMPLE: subject_code = 240011 (Equivalent to: 'Àlgebra Lineal' )
 
-Note:   If parser_html or parser_pandas have ""None"" values an error occured during the parsing mecanism or the
-        url hasn't been well written
+top_bottom <STRING>: If the user wants to check the top ('TOP') or the bottom ('BOTTOM')
+percent <FLOAT>: The top or bottom percent the end-user wants to check
 
 OUTPUT:
-'data' <LIST> == Average timestamp to have the engineering degree separated by income
-    - The values in the list are in the same order as the different incomes in 'bar_labels'
-'bar_labels' <STRING> == The desire incomes that the end-user wants to check
+'data' <LIST> == How many people in each span of top or bottom percent for a given subject
+'x_labels' <STRING> == The incomes we send to the end-user (Decision made by the backend server)
 
-HTML RENDER VARIABLES : incomes, incomes_input, tabulated_incomes, rest
+HTML RENDER VARIABLES: top_bottom; percent; subject
+PANDAS VARIABLES: data_graph_6; x_labels_graph_6
 
 FORMAT EXAMPLE:
 
-       {'data_graph_2': [6.5, 5.7, 5.4, 5.1, 4.7, 4.3],
-            'bar_labels_graph_2': "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000",
-            'incomes': parser_html,
-            'incomes_input': parser_html[:-1] if (rest and parser_html != 'None') else parser_html,
-            'tabulated_incomes': parser_pandas,
-            'rest': 1 if rest else 0 }
+      {'data_graph_6': [ 10, 12, 33, 32, 11, 2],
+            'x_labels_graph_6': "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000",
+            'top_bottom': top_bottom.capitalize(),
+            'percent': percent * 100,
+            'subject': get_name(int(subject_code))
+        })
 """
 def graph_6_AJAX (request):
 
@@ -170,6 +197,9 @@ def graph_2 (request):
 """
 INPUT:
 incomes <STRING> == The incomes that the end-user wants to see (Navbar returns 'Default')
+subjects_list <STRING> == The subjects that the end-user wants to see (Navbar returns 'Default')
+postal_code <STRING> == The type of postal code we are going to use for the data treatment
+    Note: postal_ code = 'HOME' or 'SCHOOL'
 
 FORMAT EXAMPLE:
     exemple_1:
@@ -185,28 +215,32 @@ Note:   If parser_html or parser_pandas have ""None"" values an error occured du
 
 OUTPUT:
 'data' <LIST> == Grades of Students with same income over the subjects of all the quarters
-'x_labels' <STRING> == The desire quarters that the end-user wants to check
-'line_labels' <STRING> ==  The desire incomes that the end-user wants to check
+'x_labels' <STRING> == The desire subjects that the end-user wants to check
+'column_labels' <STRING> == The desire incomes that the end-user wants to check
 
-HTML RENDER VARIABLES : incomes, incomes_input, tabulated_incomes, rest
+HTML RENDER VARIABLES : incomes; incomes_input; tabulated_incomes; rest; subjects_jinja; current_subjects; subjects_js
+PANDAS VARIABLES: data_graph_4; x_labels_graph_4; column_labels_graph_4
 
 FORMAT EXAMPLE:
 
-        {'data_graph_3':
-           [[5, 5.5, 6.7, 6.1, 5.5, 4.5],
-            [5.6, 6.0, 7.0, 6.6, 6.5, 4.6],
-            [5.8, 6.1, 6.8, 6.3, 7.1, 5.0],
-            [5.5, 4.8, 6.5, 6.4, 7.2, 4.5],
-            [5.7, 5.9, 6.4, 6.3, 7.6, 6.0],
-            [6.0, 6.5, 6.0, 6.0, 6.5, 4.9],
-            [6.1, 6.0, 6.6, 6.0, 6.3, 5.1],
-            [5.6, 6.3, 6.7, 5.7, 6.1, 5.4]],
-            'x_labels_graph_3': 'Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8',
-            'line_labels_graph_3': '5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000',
-            'incomes': parser_html,
-            'incomes_input': parser_html[:-1] if (rest and parser_html != 'None') else parser_html,
-            'tabulated_incomes': parser_pandas,
-            'rest': 1 if rest else 0 }
+        {'data_graph_4':
+            [[4.8, 6.5, 6.4, 7.2, 4.5],
+                [5.9, 6.4, 6.3, 7.6, 6.0],
+                [6.5, 6.0, 6.0, 6.5, 4.9],
+                [6.0, 6.6, 6.0, 6.3, 5.1],
+                [6.3, 6.7, 5.7, 6.1, 5.4]],
+                'x_labels_graph_4': "Incomes,Àlgebra Lineal,Càlcul I,Mecànica Fonamental,Química,Fonaments d'Informàtica",
+                'column_labels_graph_4': '10000-12500,12500-15000,15000-20000,20000-30000,+ 30000',
+
+                # Things for processing HTML and JAVASCRIPT
+                'incomes': parser_html,
+                'incomes_input': parser_html[:-1] if (rest and parser_html != 'None') else parser_html,
+                'tabulated_incomes': parser_pandas,
+                'rest': 1 if rest else 0,
+                'subjects_jinja': get_input_var_without_list_code(subjects_list_pandas),
+                'current_subjects': get_input_var_for_list_code (subjects_list_pandas),
+                'subjects_js': subjects_list
+                })
 """
 
 def graph_3 (request, incomes, subjects_list, postal_code):
@@ -261,8 +295,8 @@ def graph_3 (request, incomes, subjects_list, postal_code):
 
     
 """
-Parse the url of "graph_2" and "graph_1" know to which data to analyse with pandas
-and display to the end-user
+Parse the url of "graph_3" in other to know which data to analyse with pandas
+and display it to the end-user
 """
 def urlParser (incomes):
     rest = False
