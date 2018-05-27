@@ -1,6 +1,5 @@
 from django.shortcuts import render
 
-
 """
 INPUT:
 postal_code <STRING> == The type of postal code we are going to use for the data treatment
@@ -225,22 +224,22 @@ FORMAT EXAMPLE:
 
         {'data_graph_4':
             [[4.8, 6.5, 6.4, 7.2, 4.5],
-                [5.9, 6.4, 6.3, 7.6, 6.0],
-                [6.5, 6.0, 6.0, 6.5, 4.9],
-                [6.0, 6.6, 6.0, 6.3, 5.1],
-                [6.3, 6.7, 5.7, 6.1, 5.4]],
-                'x_labels_graph_4': "Incomes,Àlgebra Lineal,Càlcul I,Mecànica Fonamental,Química,Fonaments d'Informàtica",
-                'column_labels_graph_4': '10000-12500,12500-15000,15000-20000,20000-30000,+ 30000',
+            [5.9, 6.4, 6.3, 7.6, 6.0],
+            [6.5, 6.0, 6.0, 6.5, 4.9],
+            [6.0, 6.6, 6.0, 6.3, 5.1],
+            [6.3, 6.7, 5.7, 6.1, 5.4]],
+            'x_labels_graph_4': "Incomes,Àlgebra Lineal,Càlcul I,Mecànica Fonamental,Química,Fonaments d'Informàtica",
+            'column_labels_graph_4': '10000-12500,12500-15000,15000-20000,20000-30000,+ 30000',
 
-                # Things for processing HTML and JAVASCRIPT
-                'incomes': parser_html,
-                'incomes_input': parser_html[:-1] if (rest and parser_html != 'None') else parser_html,
-                'tabulated_incomes': parser_pandas,
-                'rest': 1 if rest else 0,
-                'subjects_jinja': get_input_var_without_list_code(subjects_list_pandas),
-                'current_subjects': get_input_var_for_list_code (subjects_list_pandas),
-                'subjects_js': subjects_list
-                })
+            # Things for processing HTML and JAVASCRIPT
+            'incomes': parser_html,
+            'incomes_input': parser_html[:-1] if (rest and parser_html != 'None') else parser_html,
+            'tabulated_incomes': parser_pandas,
+            'rest': 1 if rest else 0,
+            'subjects_jinja': get_input_var_without_list_code(subjects_list_pandas),
+            'current_subjects': get_input_var_for_list_code (subjects_list_pandas),
+            'subjects_js': subjects_list
+            })
 """
 
 def graph_3 (request, incomes, subjects_list, postal_code):
