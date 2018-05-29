@@ -4,10 +4,10 @@ from scipy import stats
 
 #Se leen los archivos
 
-dpers = pd.read_csv('dpersnomespreinsc18v2.csv')
-dfase_ini = pd.read_csv('qfaseini18v2.csv')
-dfase_noini = pd.read_csv('qfasenoini18v2.csv')
-drenta = pd.read_csv('Definitiv.csv')
+dpers = pd.read_csv('logic/dpersnomespreinsc18v2.csv')
+dfase_ini = pd.read_csv('logic/qfaseini18v2.csv')
+dfase_noini = pd.read_csv('logic/qfasenoini18v2.csv')
+drenta = pd.read_csv('logic/Definitiv.csv')
 default = [0,13500, 18000,20000, 23000, 30000, 50000]
 default2 = [0,13500,13500, 18000,18000 , 20000, 20000, 23000, 23000, 30000, 30000 , 50000]
 
@@ -18,6 +18,7 @@ def fase_ini(codass):
     return (codass >= 240011 and codass < 240026) 
 
 def desglose(codass, n, m, i):
+    codass = int(codass)
     w = [0]*2
     if (fase_ini(codass)):
         nota = dfase_ini[ dfase_ini['CODASS'] == codass ]
@@ -26,10 +27,10 @@ def desglose(codass, n, m, i):
     comunes = dpers[ dpers.CODEX.isin(nota.CODEX) ]
     if(i):
         comunes = comunes[ comunes.RC >= n]
-        comunes = comunes[ comunes.RC <= m]
+        comunes = comunes[ comunes.RC < m]
     else:
         comunes = comunes[ comunes.RF >= n]
-        comunes = comunes[ comunes.RF <= m]
+        comunes = comunes[ comunes.RF < m]
     nota = nota[nota.CODEX.isin(comunes.CODEX)]
     w[0] = len(nota.CODEX)
     w[1] = nota['NF'].mean()
@@ -54,10 +55,10 @@ def desglose_sele(n, m, i):
     v = [0]*2
     if(i):
         franja = franja[ franja.RC >= n]
-        franja = franja[ franja.RC <= m]
+        franja = franja[ franja.RC < m]
     else:
         franja = franja[ franja.RF >= n]
-        franja = franja[ franja.RF <= m]
+        franja = franja[ franja.RF < m]
     v[0] = len(franja.CODEX) 
     v[1] = franja['SELE'].mean()
     return(v)
@@ -66,7 +67,7 @@ def separacion_sele(franjas, i):
     n = int(len(franjas)/2)
     v = [0] * n
     for j in range(n):
-        w = desglose_sele(codass, franjas[2*j], franjas[2*j+1], i)
+        w = desglose_sele(franjas[2*j], franjas[2*j+1], i)
         if (w[0]>=50):
             v[j] = w[1]
         else:
@@ -93,10 +94,10 @@ def cuenta(nota, n, m, i):
      comunes = dpers[dpers.CODEX.isin(nota.CODEX)]
      if(i):
          comunes = comunes[ comunes.RC >= n]
-         comunes = comunes[ comunes.RC <= m]
+         comunes = comunes[ comunes.RC < m]
      else:
          comunes = comunes[ comunes.RF >= n]
-         comunes = comunes[ comunes.RF <= m]
+         comunes = comunes[ comunes.RF < m]
      nota = nota[nota.CODEX.isin(comunes.CODEX)]
      return(nota['NF'].count())
     
@@ -106,12 +107,14 @@ def cuenta(nota, n, m, i):
 
 def equilibrar(nota, i):
     equilibrado = [0]*7
-    comunes = dpers[dpers.CODEX.isin(nota.CODEX)]
+    rt = []
+    for j in range(len(nota.CODEX)):
+        a = nota.iloc[j].CODEX
+        rt.append(renta(a, i))
+    nota['RT'] = rt
     for j in range(6):
-        if(i):
-            equilibrado[j] = int(comunes.RC.quantile(j/6))
-        else:
-            equilibrado[j] = int(comunes.RF.quantile(j/6))
+        equilibrado[j] = int(nota.RT.quantile(j/6))
+
     equilibrado[0] = 0 
     equilibrado[6] = 60000    
     return equilibrado    
@@ -127,7 +130,7 @@ def mejores(codass, p, i):
     n = len(nota.NF)
     v = [0]*6
     for j in range(6):
-        v[j] = cuenta(nota, w[j], w[j+1], i)
+        v[j] = (cuenta(nota, w[j], w[j+1], i)/n)*100
     return [v,w]
 
 
@@ -142,7 +145,7 @@ def peores(codass, p, i):
     n = len(nota.NF)
     v = [0]*6
     for j in range(6):
-        v[j] = cuenta(nota, w[j], w[j+1], i)
+        v[j] = (cuenta(nota, w[j], w[j+1], i)/n)*100
     return [v,w]
 
 #grafo 1
@@ -161,9 +164,9 @@ def aux(a, b, codass, i):
     
 def graf1(codass, i):
     f = [0]*6
-    M = [f]*5
-    for j in range(5):
-        M[j] = aux(2*j,2*j+2,codass, i)
+    M = [f]*10
+    for j in range(10):
+        M[j] = aux(j,j+1,codass, i)
     return M
 
 #regresion lineal renta v.s. NF
@@ -186,26 +189,20 @@ def reg_lineal(codass, i):
         a = nota.iloc[j].CODEX
         if(a != 'NaN' or a != 'nan'):
             nt.append(nota.iloc[j].NF)
-            rent.append(renta(a, i))
-    print(len(nt),len(rent))    
+            rent.append(renta(a, i))   
     x = np.array(rent)
     y = np.array(nt)
     mask = ~np.isnan(x) & ~np.isnan(y)
     m, c, r, p, std_err = stats.linregress(x[mask],y[mask])
-    v = [m, c]
+    v = [m, c, nt, rent]
     return v
 
 #pones tu cp y te da la renta
 
 def codigo_p(str_cp):
     cp = int(str_cp)
-    aux = drenta[drenta.CP == cp].iloc[0]
-    return int(aux.NETA)
-
-print(codigo_p('08010'))
-
-
-
-
-        
-        
+    aux = drenta[drenta.CP == cp]
+    if(len(aux.CP) == 0):
+        return False
+    aux = str(aux.NETA.iloc[0])
+    return round(float(aux.replace(',','.')))

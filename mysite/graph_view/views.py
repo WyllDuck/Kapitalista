@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import numpy as np
 
 """
 INPUT:
@@ -29,19 +30,31 @@ FORMAT EXAMPLE:
 def graph_5_AJAX(request):
 
     from logic.subjects_list import verify_code, get_name
+    from logic.codigo import reg_lineal
     
     try:
         subject_code = int(request.GET['subject'])
     except:
         subject_code = 0
     
-    postal_code = str(request.GET['postal_code'])    
-
+    postal_code = str(request.GET['postal_code'])
+    
     if verify_code(subject_code) and postal_code in ['HOME', 'SCHOOL']:
+        v = reg_lineal(subject_code, 'SCHOOL' == postal_code)
+        nt = v[2]
+        rent = v[3]
+        s = str(round(v[0], 7)) + ' X + ' + str(round(v[1], 3))
+        Mat = list()
+        for i in range(len(nt)):
+            if not str(rent[i]) == 'nan' and not str(nt[i]) == 'nan':
+                Mat.append([round(float(rent[i]), 1), round(float(nt[i]), 1)])
+            if i >= 1500: 
+                break
+
         return render(request, "graph_view/includes/scatter_chart.html",
-            {'data_graph_5': [[0, 67],[1, 88],[2, 77],[3, 93],[4, 85],[5, 91],[6, 71],[7, 78],[8, 93],[9, 80],[10, 82],[0, 75],[5, 80],[3, 90],[1, 72],[5, 75],[6, 68],[7, 98],[3, 82],[9, 94],[2, 79],[2, 95],[2, 86],[3, 67],[4, 60],[2, 80],[6, 92],[2, 81],[8, 79],[9, 83],[3, 75],[1, 80],[3, 71],[3, 89],[4, 92],[5, 85],[6, 92],[7, 78],[6, 95],[3, 81],[0, 64],[4, 85],[2, 83],[3, 96],[4, 77],[5, 89],[4, 89],[7, 84],[4, 92],[9, 98]],
+            {'data_graph_5': Mat[:1500],
             'title_graph_5': get_name(int(subject_code)),
-            'linear_regression': 'x^2 + x + 1'})
+            'linear_regression': s})
     else:
         return render(request, "graph_view/none.html")
 
@@ -90,6 +103,8 @@ FORMAT EXAMPLE:
 """
 
 def graph_1_AJAX(request):
+    
+    from logic.codigo import graf1
 
     from logic.subjects_list import verify_code, get_name
     
@@ -103,18 +118,9 @@ def graph_1_AJAX(request):
     if verify_code(subject_code) and postal_code in ['HOME', 'SCHOOL']:
         return render(request, "graph_view/includes/stacked_bar_chart.html",
         {'data_graph_1':
-           [[ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 13, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2],
-            [ 10, 12, 33, 32, 11, 2]],
+           graf1(subject_code,'SCHOOL'== postal_code),
             'x_labels_graph_1': "0-1,1-2,2-3,3-4,4-5,5-6,6-7,7-8,8-9,9-10",
-            'bar_labels_graph_1': "x_labels, 5000-10000, 10000-12500, 12500-15000, 15000-20000, 20000-30000,+ 30000",
+            'bar_labels_graph_1': "x_labels, 5000-13500, 13500-18000, 18000-20000, 20000-23000, 23000-30000,+ 30000",
             'title_graph_1': get_name(int(subject_code)),
             'subject': subject_code})
     else:
@@ -158,6 +164,8 @@ FORMAT EXAMPLE:
 """
 def graph_6_AJAX (request):
 
+    from logic.codigo import peores, mejores
+    
     from logic.subjects_list import verify_code, get_name  
 
     try:
@@ -172,11 +180,23 @@ def graph_6_AJAX (request):
         percent = float(request.GET['percent'])
     except:
         percent = 0
-
+    
+    if(top_bottom == 'TOP'):
+        Mat = mejores(subject_code, percent, 'SCHOOL' == postal_code)
+    else:
+        Mat = peores(subject_code, percent, 'SCHOOL' == postal_code)
+    
+    s = str()
+    for i in range (6):
+        if(i != 5):
+            s = s + str(Mat[1][i]) + '-' + str(Mat[1][i+1]) + ','
+        else:
+            s = s + '+' + str(Mat[1][i])
+    
     if percent != 0 and verify_code(subject_code) and postal_code in ['HOME', 'SCHOOL'] and top_bottom in ['TOP', 'BOTTOM']:
         return render(request, "graph_view/includes/renta_column.html",
-        {'data_graph_6': [ 10, 12, 33, 32, 11, 2],
-            'x_labels_graph_6': "5000-10000,10000-12500,12500-15000,15000-20000,20000-30000,+ 30000",
+        {'data_graph_6': Mat[0],
+            'x_labels_graph_6': s,
             'top_bottom': top_bottom.capitalize(),
             'percent': percent * 100,
             'subject': get_name(int(subject_code))
@@ -243,9 +263,11 @@ FORMAT EXAMPLE:
 """
 
 def graph_3 (request, incomes, subjects_list, postal_code):
+    
+    from logic.codigo import medias
 
     if incomes == 'Default':
-        incomes = "5_10a10_15a15_18a18_21a21_25aREST"
+        incomes = "10_15a15_18a18_21a21_25aREST"
 
     if subjects_list == 'Default':
         subjects_list = '240011a240012a240013'
@@ -255,22 +277,58 @@ def graph_3 (request, incomes, subjects_list, postal_code):
     subjects_list_pandas, subjects_list = urlParserSubjects(subjects_list)
 
     # Subjects list:
-    from logic.subjects_list import get_input_var_defaut, get_input_var_without_list_code, get_input_var_for_list_code
-
-    # If variables are well written do this:
+    from logic.subjects_list import get_input_var_defaut, get_input_var_without_list_code, get_input_var_for_list_code, get_name
+        
+   # If variables are well written do this:
     if parser_pandas != None and subjects_list_pandas != None and postal_code in ['HOME', 'SCHOOL']: 
-        return render(request, "graph_view/graph_3.html",
-            {'data_graph_4':
-            [[4.8, 6.5, 6.4, 7.2, 4.5],
-                [5.9, 6.4, 6.3, 7.6, 6.0],
-                [6.5, 6.0, 6.0, 6.5, 4.9],
-                [6.0, 6.6, 6.0, 6.3, 5.1],
-                [6.3, 6.7, 5.7, 6.1, 5.4]],
-                'x_labels_graph_4': "Incomes,Àlgebra Lineal,Càlcul I,Mecànica Fonamental,Química,Fonaments d'Informàtica",
-                'column_labels_graph_4': '10000-12500,12500-15000,15000-20000,20000-30000,+ 30000',
 
-                # Things for processing HTML and JAVASCRIPT
-                'incomes': parser_html,
+        try: 
+            v_franjas = [0]*2*len(parser_pandas)
+            s = str()
+        
+            for i in range(len(parser_pandas)):
+                v_franjas[2*i] = parser_pandas[i][0]
+                v_franjas[2*i+1] = parser_pandas[i][1]
+        
+            for i in range (len(v_franjas)//2):
+                if(i != (len(v_franjas)/2)-1):
+                    s = s + str(v_franjas[2*i]) + '-' + str(v_franjas[2*i+1]) + ','
+                else:
+                    s = s + str(v_franjas[2*i]) + '-' + str(v_franjas[2*i+1]) 
+            
+            if(rest):
+                v_franjas.append(max(v_franjas))
+                v_franjas.append(max(max(v_franjas)+1,60000))
+                s = s + ',' + '+ ' + str(max(v_franjas[:-1]))
+
+            x_labels = str()
+            for i in range(len(subjects_list_pandas)):
+                x_labels += str(get_name(subjects_list_pandas[i]))
+                if i != len(subjects_list_pandas) - 1:
+                    x_labels += ','
+            x_labels = 'Incomes,' + x_labels
+
+            data = medias(subjects_list_pandas, v_franjas, 'SCHOOL' == postal_code)
+            data = [list(i) for i in list(zip(*data))]
+
+            return render(request, "graph_view/graph_3.html",
+                {'data_graph_4': data,
+                    'x_labels_graph_4': x_labels,
+                    'column_labels_graph_4': s,
+
+                    # Things for processing HTML and JAVASCRIPT
+                    'incomes': parser_html,
+                    'incomes_input': parser_html[:-1] if (rest and parser_html != 'None') else parser_html,
+                    'tabulated_incomes': parser_pandas,
+                    'rest': 1 if rest else 0,
+                    'subjects_jinja': get_input_var_without_list_code(subjects_list_pandas),
+                    'current_subjects': get_input_var_for_list_code (subjects_list_pandas),
+                    'subjects_js': subjects_list
+                    })
+
+        except:
+            return render(request, "graph_view/graph_3_none.html",
+            {   'incomes': parser_html,
                 'incomes_input': parser_html[:-1] if (rest and parser_html != 'None') else parser_html,
                 'tabulated_incomes': parser_pandas,
                 'rest': 1 if rest else 0,
@@ -278,6 +336,7 @@ def graph_3 (request, incomes, subjects_list, postal_code):
                 'current_subjects': get_input_var_for_list_code (subjects_list_pandas),
                 'subjects_js': subjects_list
                 })
+
 
     # If variables are NOT well written do this:    
     else:

@@ -23,8 +23,8 @@
         var column_labels = $('#column_labels_graph_4').data().other;
         column_labels = column_labels.split(',');
 
-        var min = Math.min.apply(null, flatten(data)) - 1
-        var max = Math.max.apply(null, flatten(data)) + 1
+        var min = Math.min.apply(null, flatten(data)) - 0.1
+        var max = Math.max.apply(null, flatten(data)) + 0.1
 
 
         // Init variable:
@@ -96,6 +96,5 @@
 <meta id="column_labels_graph_4" data-name="data" data-other="{{column_labels_graph_4}}">
 
 <div id="graph_4" style="width: 100%"></div>
-
 
 {% endblock %}

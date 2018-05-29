@@ -12,8 +12,8 @@
         var value = $('#data_graph_5').data().other;
 
         var data = new google.visualization.DataTable();
-        data.addColumn('number', 'Income');
-        data.addColumn('number', 'Average Grade');
+        data.addColumn('number', 'Anual Income');
+        data.addColumn('number', 'Grade');
 
         data.addRows(value);
 
@@ -24,7 +24,7 @@
                 subtitle: 'How does income affect grades?'
             },
             hAxis: {
-                title: 'Income',
+                title: 'Anual Income',
                 textStyle: {
                     color: 'black',
                     fontName: 'Raleway',
@@ -32,7 +32,7 @@
                 }
             },
             vAxis: {
-                title: 'Average Grade',
+                title: 'Grade',
                 textStyle: {
                     color: 'black',
                     fontName: 'Raleway',

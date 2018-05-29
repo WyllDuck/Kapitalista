@@ -9,13 +9,14 @@
 
         // FORMATING DATA FROM DJANGO TO JAVASCRIPT:
         var data = $('#data_graph_6').data().other;
+        console.log(data)
 
         var x_labels = ($('#x_labels_graph_6').data().other);
         x_labels = x_labels.split(',')
 
         // Init variable:
         var value = new Array();
-        value.push(["Income", "Number of People"]);
+        value.push(["Income", "Percentage of people"]);
 
         for (var i = 0; i < data.length; i++) {
             value.push([x_labels[i], data[i]]);
@@ -31,8 +32,7 @@
                 width: '90%',
             },
             hAxis: {
-                title: 'Time of Day',
-                format: 'h:mm a',
+                title: 'Incomes',
                 viewWindow: {
                     min: [7, 30, 0],
                     max: [17, 30, 0]
@@ -47,7 +47,7 @@
                 }
             },
             vAxis: {
-                title: 'Rating (scale of 1-10)'
+                title: 'Income representation in this zone'
             }
         };
 

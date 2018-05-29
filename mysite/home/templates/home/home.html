@@ -14,19 +14,32 @@
     <div style="background: rgb(255,255,255); padding-right: 10%; padding-left: 10%; padding-top: 5%;; padding-bottom: 5%">
         <div style="background: rgb(245, 245, 245); padding: 25px">
 
-            <h1>Does the family income affect the grades in university?</h1>
+            <center>
+                <h1>What is our Project about?</h1>
+                <h4>Problematic: Does the family income affect the grades in university?</h4>
+            </center>
             <hr>
 
-            <p> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Atque, voluptate? A provident asperiores nihil! Fugiat dolore et nulla maxime assumenda voluptate necessitatibus quod asperiores quae non sed sunt, exercitationem aliquid? Lorem ipsum
-                dolor sit amet consectetur, adipisicing elit. Quos laborum non magni ipsum, provident incidunt iusto id, sed nesciunt veniam illum exercitationem cum quod doloribus architecto sint doloremque similique culpa. Lorem ipsum dolor, sit amet
-                consectetur adipisicing elit. Placeat dolores nobis dolor tempore eveniet aperiam itaque doloremque! Animi atque praesentium tenetur itaque maiores perspiciatis asperiores odio magni consequatur eveniet. Tenetur.
+            <p> We are three Indsutrial Engineering students in the Polytechnic University of Barcelona. One day, walking around, we noticed there were a lot of different people surrounding us; so a questions came up to our minds; Does familiar income affect
+                our marks? Computer Science Department let us some files with all students’ marks, ID, Postal codes, etc. since 2010 until now, and we started to investigate.
+            </p>
+            <p>Firstly, we connected each Postal Code with its location. When we had all the locations, we searched for each locations its gross salary and the we calculated the net salar( TO calculate it, we have used 2015 data and IRPF intervals). Lately,
+                we decided to make four graphs; two bar codes, one regression and a multi bar graph.
             </p>
 
-            <a href="/conclusion" class="btn btn-primary" style="position: relative; left: 40%; font-size: 25px;">
-                <font style="color: #ffffff">
-                    See Study Results
-                </font>
-            </a>
+            <hr>
+
+            <center>
+                <h5>We hope you enjoy surfing on our website!</h5>
+            </center>
+
+            <div style="padding-top: 10px">
+                <a href="/conclusion" class="btn btn-primary" style="position: relative; left: 40%; font-size: 25px;">
+                    <font style="color: #ffffff">
+                        See Study Results
+                    </font>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -42,11 +55,12 @@
             <div class="col-md-4">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Grafic by subject</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Within the same subject the distribution of grades by income in percentage</h6>
+                        <h5 class="card-title">Charts by subject</h5>
+                        <br>
+                        <h6 class="card-subtitle mb-2 text-muted">Select a subject and visualize the grade distribution by income. You will be able to see it in bar graph and also in a scatter graph in which each point represents de grade of a person and he's anual incomes.</h6>
                         <hr>
                         <div style="padding: 10px">
-                            <img src="{% static 'home/img/Stacked_column_chart.png' %}" style="width : 14rem; height : 14rem">
+                            <img src="{% static 'home/img/scatter_chart.png' %}" style="width : 14rem; height : 14rem">
                         </div>
                         <a href="{% url 'graph:graph_1' %}" class="btn btn-dark">View</a>
                     </div>
@@ -55,11 +69,12 @@
             <div class=" col-md-4 ">
                 <div class="card " style="width: 18rem; ">
                     <div class="card-body ">
-                        <h5 class="card-title ">University timestamp by income</h5>
-                        <h6 class="card-subtitle mb-2 text-muted ">How many years does it take to get the diploma in relation to your income?</h6>
+                        <h5 class="card-title ">Best and worst students</h5>
+                        <br>
+                        <h6 class="card-subtitle mb-2 text-muted ">Here we can see who are the best and worst students for a given subject. You can choose which percent or subject is shown by changing the settings in the side bar.</h6>
                         <hr>
                         <div style="padding: 10px">
-                            <img src="{% static 'home/img/progress_bar.jpg' %}" style="width : 14rem; height : 14rem">
+                            <img src="{% static 'home/img/bar_chart.jpg' %}" style="width : 14rem; height : 14rem">
                         </div>
                         <a href="{% url 'graph:graph_2' %}" class="btn btn-dark">View</a>
                     </div>
@@ -68,11 +83,12 @@
             <div class="col-md-4 ">
                 <div class="card " style="width: 18rem; ">
                     <div class="card-body ">
-                        <h5 class="card-title ">Grafic by income</h5>
-                        <h6 class="card-subtitle mb-2 text-muted ">Average of all grades by income over the quarters</h6>
+                        <h5 class="card-title ">Multi bar chart by income and subjects</h5>
+                        <br>
+                        <h6 class="card-subtitle mb-2 text-muted ">The last graphic and the more complex, shows for each income and subject selected the average mark. You can add and remove subjects and incomes as you feel.</h6>
                         <hr>
                         <div style="padding: 10px">
-                            <img src="{% static 'home/img/area_chart.png' %}" style="width : 14rem; height : 14rem">
+                            <img src="{% static 'home/img/multi_bar_chart.png' %}" style="width : 14rem; height : 14rem">
                         </div>
                         <a href="{% url 'graph:graph_3' 'Default' 'Default' 'HOME' %}" class="btn btn-dark">View</a>
                     </div>

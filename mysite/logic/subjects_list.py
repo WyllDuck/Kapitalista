@@ -1,31 +1,6 @@
-subjects = [[240011, "Àlgebra Lineal"],
-	[240012, "Càlcul I"],
-	[240013, "Mecànica Fonamental"],
-	[240014, "Química I"],
-	[240015, "Fonaments d'Informàtica"],
-	[240021, "Geometria"],
-	[240022, "Càlcul II"],
-	[240023, "Termodinàmica Fonamental"],
-	[240024, "Química II"],
-	[240025, "Expressió Gràfica"],
-	[240031, "Electromagnetisme"],
-	[240032, "Mètodes Numèrics"],
-	[240033, "Materials"],
-	[240131, "Equacions Diferencials"],
-	[240132, "Informàtica"],
-	[240133, "Mecànica"],
-	[240041, "Economia i Empresa"],
-	[240042, "Estadística"],
-	[240043, "Dinàmica de Sistemes"],
-	[240044, "Projecte I"],
-	[240141, "Teoria de Màquines i Mecanismes"],
-	[240401, "Ampliació de Mecànica"],
-	[240402, "Comunicació d'Informació Tècnica"],
-	[240403, "Debats Sobre Tecnologia i Societat"],
-	[240404, "Els Orígens de l'Enginyeria Moderna"],
-	[240405, "Jocs per a Computadors. Estructura i Desenvolupament"],
-	[240406, "Taller Elèctric"],
-	[240407, "Tecnologia de la Llum"]]
+from logic.asignaturas import quatris
+
+subjects = quatris()
 
 # Verify that the code given is correct 
 def verify_code (code):
@@ -68,5 +43,5 @@ def get_current_subject (code):
 # Get name of subject
 def get_name (code):
 	for subject_code, subject_name in subjects:
-		if subject_code == code:
+		if int(subject_code) == int(code):
 			return subject_name
