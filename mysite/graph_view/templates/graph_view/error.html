@@ -1,0 +1,31 @@
+{% block content %}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<center style="padding: 20px">
+    <div class="row" style="padding: 5%; background: rgb(202, 202, 255); border-radius: 20px">
+        <div class="col-md-3">
+            <i class="fa fa-exclamation-circle" style="font-size:12.8em" aria-hidden="true"></i>
+        </div>
+        <div class="col-md-9">
+            <h1>NO DATA WITH THIS CHARACTERISTICS</h1>
+            <hr>
+            <p>
+                The subject's code you are trying to acces doesn't exists or the income spans you have entered have no data in them. Try to go Back to the previous page to change the information you are looking for or visit our home page. Thanks
+            </p>
+            <div class="row" style="display: flex; align-items: center; justify-content: center; padding-top: 5px">
+                <div style="padding: 5px">
+                    <button type="button" onclick="goBack()" class="btn btn-danger btn-lg">Go Back</button>
+                </div>
+                <div style="padding: 5px">
+                    <a href="{% url 'home:index' %}" class="btn btn-primary btn-lg ">Go Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</center>
+
+{% endblock %}

@@ -323,7 +323,9 @@ def graph_3 (request, incomes, subjects_list, postal_code):
                     'rest': 1 if rest else 0,
                     'subjects_jinja': get_input_var_without_list_code(subjects_list_pandas),
                     'current_subjects': get_input_var_for_list_code (subjects_list_pandas),
-                    'subjects_js': subjects_list
+                    'subjects_js': subjects_list,
+                    'none': False,
+                    'error': False
                     })
 
         except:
@@ -334,7 +336,9 @@ def graph_3 (request, incomes, subjects_list, postal_code):
                 'rest': 1 if rest else 0,
                 'subjects_jinja': get_input_var_without_list_code(subjects_list_pandas),
                 'current_subjects': get_input_var_for_list_code (subjects_list_pandas),
-                'subjects_js': subjects_list
+                'subjects_js': subjects_list,
+                'none': False,
+                'error': True
                 })
 
 
@@ -347,7 +351,9 @@ def graph_3 (request, incomes, subjects_list, postal_code):
                 'rest': 1 if rest else 0,
                 'subjects_jinja': get_input_var_defaut(),
                 'current_subjects': ['Default select'],
-                'subjects_js': subjects_list
+                'subjects_js': subjects_list,
+                'none': True,
+                'error': False
                 })
         
 

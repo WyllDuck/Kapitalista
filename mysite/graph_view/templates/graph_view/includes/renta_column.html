@@ -5,11 +5,22 @@
     });
     google.charts.setOnLoadCallback(drawBasic);
 
+    function flatten(arr) {
+        return arr.reduce(function(flat, toFlatten) {
+            return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+        }, []);
+    }
+
     function drawBasic() {
 
         // FORMATING DATA FROM DJANGO TO JAVASCRIPT:
         var data = $('#data_graph_6').data().other;
-        console.log(data)
+
+        var max = Math.max.apply(null, flatten(data))
+        max = Math.ceil(max / 5) * 5
+        if (max < 35) {
+            max = 35
+        }
 
         var x_labels = ($('#x_labels_graph_6').data().other);
         x_labels = x_labels.split(',')
@@ -33,10 +44,6 @@
             },
             hAxis: {
                 title: 'Incomes',
-                viewWindow: {
-                    min: [7, 30, 0],
-                    max: [17, 30, 0]
-                }
             },
             legend: {
                 position: 'bottom',
@@ -47,7 +54,11 @@
                 }
             },
             vAxis: {
-                title: 'Income representation in this zone'
+                title: 'Income representation in this zone',
+                viewWindow: {
+                    min: 0,
+                    max: max
+                },
             }
         };
 
